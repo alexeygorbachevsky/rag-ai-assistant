@@ -1,0 +1,78 @@
+.form{
+  padding: 0 24px;
+
+  .chatInput {
+    margin: 0 auto 24px;
+    width: 100%;
+    max-width: 768px;
+    display: flex;
+    background-color: #303030;
+    border-radius: 28px;
+    min-height: 102px;
+    max-height: 144px;
+    overflow: hidden;
+
+    .textInput {
+      position: relative;
+      flex: 1;
+    }
+
+    .inputButtons {
+      bottom: 12px;
+      right: 12px;
+      position: absolute;
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+
+      .iconButton {
+        flex-shrink: 0;
+        background: transparent;
+        border: none;
+        color: #ffffff;
+        height: 36px;
+        width: 36px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        &:last-of-type {
+          background-color: #ffffff;
+
+          &:hover {
+            opacity: 0.7;
+          }
+
+          svg {
+            color: #000000;
+          }
+        }
+      }
+
+      .audioButton {
+        @extend .iconButton;
+
+        &:last-of-type {
+          background-color: transparent;
+
+          &:hover {
+            opacity: unset;
+            background: rgba(255, 255, 255, 0.1);
+          }
+
+          svg {
+            color: #ffffff;
+          }
+        }
+      }
+    }
+  }
+}

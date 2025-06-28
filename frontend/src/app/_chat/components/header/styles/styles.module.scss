@@ -1,0 +1,35 @@
+.header {
+  position: sticky;
+  padding: 0 24px;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 1px 0 #ffffff0d;
+
+  .sidebarButton {
+    margin-right: 12px;
+    padding: 0 8px;
+    height: 36px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    background-color: transparent;
+    text-align: left;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background-color: #ffffff26;
+    }
+  }
+
+  .headerTitle {
+    margin: 0;
+    font-weight: 400;
+    font-size: 1.125rem;
+    color: #fff;
+  }
+}

@@ -1,0 +1,58 @@
+.wrapper {
+  display: flex;
+  height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #202123;
+
+  .mainArea {
+    margin-left: 0;
+    transition: margin-left 0.3s ease;;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    .chatTitle {
+      margin: 0 auto 24px;
+      font-size: 28px;
+      line-height: 34px;
+    }
+  }
+
+  .mainAreaExpended {
+    margin-left: -260px;
+  }
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    .mainArea {
+      transition: none;
+    }
+    
+    .mainAreaExpended {
+      margin-left: 0;
+    }
+  }
+}
+
+.loading {
+    padding: 16px 24px;
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    margin: 0 24px 16px;
+}
+
+.error {
+    padding: 16px 24px;
+    text-align: center;
+    color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.1);
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    border-radius: 8px;
+    margin: 0 auto 16px;
+    width: 100%;
+    max-width: 768px;
+}

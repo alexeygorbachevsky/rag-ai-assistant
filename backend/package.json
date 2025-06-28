@@ -1,0 +1,59 @@
+{
+  "name": "rag-ai-backend",
+  "version": "1.0.0",
+  "description": "RAG AI Backend with Fastify and LangChain",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/app.ts",
+    "build": "tsc",
+    "start": "node dist/src/app.js",
+    "index-data": "tsx --env-file=.env scripts/index.ts",
+    "type-check": "tsc --noEmit",
+    "lint-check": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "format:check": "prettier --check src/**/*.ts scripts/**/*.ts",
+    "format:fix": "prettier --write src/**/*.ts scripts/**/*.ts"
+  },
+  "keywords": [
+    "fastify",
+    "langchain",
+    "rag",
+    "ai",
+    "qdrant"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@fastify/cors": "^8.4.2",
+    "@fastify/env": "^4.4.0",
+    "@fastify/swagger": "^8.15.0",
+    "@fastify/swagger-ui": "^4.1.0",
+    "@huggingface/inference": "^4.0.6",
+    "@langchain/community": "^0.3.47",
+    "@langchain/core": "^0.3.58",
+    "@langchain/qdrant": "^0.1.2",
+    "@openrouter/ai-sdk-provider": "^0.7.2",
+    "ai": "^4.3.16",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prettier": "^5.5.0",
+    "fastify": "^4.24.3",
+    "fastify-plugin": "^5.0.1",
+    "ioredis": "^5.4.1",
+    "langchain": "^0.3.0",
+    "prettier": "^3.6.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/ioredis": "^5.0.8",
+    "@types/node": "^20.10.4",
+    "@typescript-eslint/eslint-plugin": "^6.13.2",
+    "@typescript-eslint/parser": "^6.13.2",
+    "eslint": "^8.55.0",
+    "tsx": "^4.6.2",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
