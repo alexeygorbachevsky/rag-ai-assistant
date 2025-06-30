@@ -17,7 +17,9 @@ const Message: FC<UIMessage> = ({ role, content }) => {
         return (
             <div className={joinClassNames(styles.message, styles.assistant)}>
                 <div className={joinClassNames(styles.bubble, styles.assistantBubble)}>
-                    <div className={styles.ragAnswer}>{answer}</div>
+                    <div className={styles.ragAnswer}>
+                        <ReactMarkdown>{answer}</ReactMarkdown>
+                    </div>
 
                     {sources && (
                         <div className={styles.ragSources}>

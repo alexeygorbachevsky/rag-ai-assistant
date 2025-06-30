@@ -7,7 +7,7 @@
     "dev": "tsx watch src/app.ts",
     "build": "tsc",
     "start": "node dist/src/app.js",
-    "index-data": "tsx --env-file=.env scripts/index.ts",
+    "upload-mia-data": "tsx --env-file=.env scripts/uploadMIACollection.ts",
     "type-check": "tsc --noEmit",
     "lint-check": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
@@ -26,6 +26,7 @@
   "dependencies": {
     "@fastify/cors": "^8.4.2",
     "@fastify/env": "^4.4.0",
+    "@fastify/rate-limit": "8.1.0",
     "@fastify/swagger": "^8.15.0",
     "@fastify/swagger-ui": "^4.1.0",
     "@huggingface/inference": "^4.0.6",

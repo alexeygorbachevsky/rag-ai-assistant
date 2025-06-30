@@ -6,6 +6,7 @@ import ArrowUpIcon from "icons/arrow-up.svg";
 import DictateIcon from "icons/dictate.svg";
 import CrossIcon from "icons/cross.svg";
 import CheckmarkIcon from "icons/checkmark.svg";
+import StopIcon from "icons/stop.svg";
 
 import {TextArea} from "components/input";
 
@@ -20,15 +21,19 @@ interface ChatInputProps {
     input: string;
     setInput: (value: string) => void;
     onSubmit: (event?: MouseEvent<HTMLButtonElement>, isVoice?: boolean) => void;
+    onStop: () => void;
+    status: "submitted" | "streaming" | "ready" | "error";
 }
 
-const ChatInput = ({input, setInput, onSubmit}: ChatInputProps) => {
+const ChatInput = ({input, setInput, onSubmit, onStop, status}: ChatInputProps) => {
     const [isDictating, setIsDictating] = useState(false);
 
     const audioVisualizerRef = useRef<AudioVisualizerRef>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     const recognitionRef = useSpeechRecognition({setIsDictating, input, onSubmit, setInput, isDictating});
+
+    const isGenerating = status === "submitted" || status === "streaming";
 
     const toggleRecording = async () => {
         if (isDictating) {
@@ -66,7 +71,7 @@ const ChatInput = ({input, setInput, onSubmit}: ChatInputProps) => {
                         if (e.key === "Enter") {
                             e.preventDefault();
 
-                            if (!input) {
+                            if (!input || isGenerating) {
                                 return;
                             }
 
@@ -113,9 +118,24 @@ const ChatInput = ({input, setInput, onSubmit}: ChatInputProps) => {
                                     >
                                         <DictateIcon/>
                                     </button>
-                                    <button type="button" onClick={onSubmit} className={styles.iconButton}>
-                                        <ArrowUpIcon/>
-                                    </button>
+                                    {isGenerating ? (
+                                        <button 
+                                            type="button" 
+                                            onClick={onStop} 
+                                            className={styles.iconButton}
+                                        >
+                                            <StopIcon/>
+                                        </button>
+                                    ) : (
+                                        <button 
+                                            type="button" 
+                                            onClick={onSubmit} 
+                                            className={styles.iconButton}
+                                            disabled={!input || isGenerating}
+                                        >
+                                            <ArrowUpIcon/>
+                                        </button>
+                                    )}
                                 </>
                             )}
                         </div>

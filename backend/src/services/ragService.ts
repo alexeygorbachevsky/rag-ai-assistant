@@ -4,7 +4,7 @@ import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { streamText } from "ai";
 
-import type { SearchResult, CacheEntry } from "../types/index.js";
+import type { SearchResult } from "../types/index.js";
 
 import { RedisCacheService } from "./redisCacheService.js";
 // import { StreamCacheUtil } from "../utils/streamCache.js";
@@ -94,14 +94,17 @@ export class RAGService {
                 throw new Error("Vector store not initialized");
             }
 
-            const searchResults = await this.vectorStore.similaritySearchWithScore(question, 10);
+            const searchResults = await this.vectorStore.similaritySearchWithScore(question, 250);
             const searchTime = Date.now() - searchStartTime;
 
-            const filteredResults = searchResults.filter(([_doc, score]) => score > 0.7);
+            const finalResults = searchResults
+                .filter(([{ metadata }, score]) => score > 0.5 && !metadata.title.toLowerCase().includes("untitled"))
+                .sort(([, scoreA], [, scoreB]) => scoreB - scoreA);
 
-            console.log("FILTERED_RESULTS", filteredResults.length);
+            console.log("finalResults", finalResults);
 
-            const finalResults = filteredResults.length >= 2 ? filteredResults : searchResults.slice(0, 8);
+            // const filteredResults = searchResults.filter(([_doc, score]) => score > 0.7);
+            // const finalResults = filteredResults.length >= 2 ? filteredResults : searchResults.slice(0, 8);
 
             console.log("finalResults", finalResults.length);
 
@@ -115,13 +118,13 @@ export class RAGService {
             this.logger?.info(`Retrieved sources: [${sources.join(", ")}]`);
 
             const context = contexts.join("\n\n");
-            console.log("context", context);
             const messages = await this.buildPrompt(question, context, sources, conversationHistory);
 
             const llmStartTime = Date.now();
             const response = streamText({
-                model: this.openrouter("mistralai/mistral-small-3.2-24b-instruct"),
-                // model: this.openrouter("deepseek/deepseek-chat-v3-0324"),
+                // mistralai/mistral-small-3.2-24b-instruct
+                // deepseek/deepseek-chat-v3-0324
+                model: this.openrouter("deepseek/deepseek-chat-v3-0324"),
                 messages,
                 onFinish: async result => {
                     const processingTime = Date.now() - startTime;
@@ -135,19 +138,23 @@ export class RAGService {
                         `Answer quality metrics - length: ${result.text.length} chars, tokens: ${result.usage?.totalTokens || "unknown"}`,
                     );
 
-                    const cacheEntry: CacheEntry = {
-                        answer: result.text,
-                        sources,
-                        timestamp: Date.now(),
-                    };
-                    await this.cacheService.set(question, cacheEntry);
+                    // const cacheEntry: CacheEntry = {
+                    //     answer: result.text,
+                    //     sources,
+                    //     timestamp: Date.now(),
+                    // };
+                    // await this.cacheService.set(question, cacheEntry);
                 },
                 onError: error => {
                     this.logger?.error("Stream error:", error);
                 },
             });
 
-            return response.toDataStreamResponse();
+            return response.toDataStreamResponse({
+                getErrorMessage: error => {
+                    return (error as Error)?.message;
+                },
+            });
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
             this.logger?.error(`RAG processing failed: ${errorMessage}`);
@@ -170,41 +177,14 @@ export class RAGService {
 
         for (const [_doc] of searchResults) {
             const metadata = _doc.metadata as SearchResult["metadata"];
-            const source = metadata.title || metadata.objectId || "Unknown";
+            const baseSource = metadata.title || metadata.objectId || "Unknown";
+            const source = metadata.filename ? `${baseSource} (${metadata.filename})` : baseSource;
 
             sources.push(source);
             contexts.push(_doc.pageContent);
         }
 
         return { sources, contexts };
-    }
-
-    private buildPromptRaw(question: string, context: string, sources: string[]): string {
-        const sourcesText =
-            sources.length > 0
-                ? "\n\n**Sources:**\n" +
-                  sources.map((source: string, index: number) => `${index + 1}. ${source}`).join("\n")
-                : "";
-
-        return `You are a knowledgeable art historian and museum curator. Using the provided context about artworks from the Minneapolis Institute of Art collection, answer the user's question accurately and informatively.
-
-Context:
-${context}
-
-Question: ${question}
-
-Instructions:
-- Base your answer only on the provided context
-- If the context doesn't contain relevant information, say so
-- Be specific about artworks, artists, and details when possible
-- Keep your response concise but informative
-- Do not make up information not present in the context
-- Do NOT include source numbers or references in the main text of your answer
-- At the end of your answer, include a Sources section with ONLY the sources you actually used in your answer
-- Number the sources consecutively starting from 1 (1, 2, 3, etc.) in the Sources section
-- Sources format: "**Sources:**\n1. [Source Title]\n2. [Source Title]\n3. [Source Title]"
-
-Available sources:${sourcesText}`;
     }
 
     private async buildPrompt(

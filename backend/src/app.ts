@@ -5,12 +5,15 @@ import { validateEnv, fastifyEnvSchema } from "./config/env.js";
 import corsPlugin from "./plugins/cors.js";
 import ragPlugin from "./plugins/ragPlugin.js";
 import swaggerPlugin from "./plugins/swagger.js";
+import { GlobalLimitService } from "./services/globalLimitService.js";
 import { registerRoutes } from "./routes/ask.js";
+import fastifyRateLimit from "@fastify/rate-limit";
 
 const fastify = Fastify({
     logger: {
         level: process.env.NODE_ENV === "production" ? "warn" : "info",
     },
+    trustProxy: true,
 });
 
 await fastify.register(fastifyEnv, {
@@ -21,7 +24,15 @@ await fastify.register(fastifyEnv, {
 const envConfig = validateEnv(process.env);
 
 await fastify.register(corsPlugin, { envConfig });
+
+await fastify.register(fastifyRateLimit, {
+    global: false,
+});
+
 await fastify.register(swaggerPlugin);
+
+const globalLimitService = new GlobalLimitService(fastify.log);
+fastify.decorate("globalLimitService", globalLimitService);
 
 try {
     await fastify.register(ragPlugin);
@@ -38,6 +49,7 @@ const setupGracefulShutdown = () => {
         fastify.log.info("Shutting down server...");
 
         try {
+            await globalLimitService.close();
             await fastify.close();
             process.exit(0);
         } catch (error) {

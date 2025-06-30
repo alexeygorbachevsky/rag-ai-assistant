@@ -88,7 +88,9 @@ export class SemanticCacheStrategy implements CacheKeyStrategy {
     }
 
     private cosineSimilarity(a: number[], b: number[]): number {
-        if (a.length !== b.length) return 0;
+        if (a.length !== b.length) {
+            return 0;
+        }
 
         let dotProduct = 0;
         let normA = 0;
@@ -100,7 +102,9 @@ export class SemanticCacheStrategy implements CacheKeyStrategy {
             normB += b[i] * b[i];
         }
 
-        if (normA === 0 || normB === 0) return 0;
+        if (normA === 0 || normB === 0) {
+            return 0;
+        }
 
         return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
     }

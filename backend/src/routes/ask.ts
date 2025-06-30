@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
+import { createDataStreamResponse } from "ai";
 
 const askSchema = z.object({
     question: z.string().min(1, "Question is required").optional(),
@@ -18,6 +19,8 @@ const askQuerySchema = z.object({
 });
 
 export const registerRoutes = async (fastify: FastifyInstance) => {
+    const SKIPPED_IP = process.env.NODE_ENV === "development" ? "::1" : process.env.SKIPPED_IP;
+
     fastify.get("/", async (_request, _reply) => {
         return { message: "Hi, what can I help with?" };
     });
@@ -34,6 +37,41 @@ export const registerRoutes = async (fastify: FastifyInstance) => {
     fastify.post(
         "/ask",
         {
+            config: {
+                rateLimit: {
+                    max: 1,
+                    timeWindow: "1 day",
+                    allowList: (request: any) => {
+                        const allowedIPs = [SKIPPED_IP];
+                        const clientIP = request.ip;
+
+                        console.log("ALLOWLIST FUNCTION CALLED!");
+                        console.log("allowedIPs:", allowedIPs);
+                        console.log("request.ip:", clientIP);
+
+                        const shouldAllow = allowedIPs.includes(clientIP);
+                        console.log("Should allow (skip rate limit):", shouldAllow);
+
+                        return shouldAllow;
+                    },
+                    errorResponseBuilder: () => {
+                        const errorMessage = `Too many requests from your IP. Please try again later.`;
+
+                        const response = createDataStreamResponse({
+                            execute: async () => {
+                                throw new Error(errorMessage);
+                            },
+                            onError: () => errorMessage,
+                        });
+
+                        response.headers.set("Access-Control-Allow-Origin", "*");
+                        response.headers.set("Access-Control-Allow-Methods", "POST, OPTIONS");
+                        response.headers.set("Access-Control-Allow-Headers", "Content-Type, Accept");
+
+                        return response;
+                    },
+                },
+            },
             schema: {
                 description: "Ask a question to the RAG AI system",
                 tags: ["AI"],
@@ -49,11 +87,6 @@ export const registerRoutes = async (fastify: FastifyInstance) => {
                 body: {
                     type: "object",
                     properties: {
-                        question: {
-                            type: "string",
-                            minLength: 1,
-                            description: "Direct question to ask the AI",
-                        },
                         messages: {
                             type: "array",
                             description: "Conversation history with messages",
@@ -107,6 +140,24 @@ export const registerRoutes = async (fastify: FastifyInstance) => {
             const startTime = Date.now();
 
             try {
+                if (request.ip !== SKIPPED_IP) {
+                    const globalLimit = await fastify.globalLimitService.checkAndIncrementGlobalLimit();
+                    if (!globalLimit.allowed) {
+                        reply.header("Access-Control-Allow-Origin", "*");
+                        reply.header("Access-Control-Allow-Methods", "POST, OPTIONS");
+                        reply.header("Access-Control-Allow-Headers", "Content-Type, Accept");
+
+                        const errorMessage = `Global daily limit has been reached. Please try again tomorrow.`;
+
+                        return createDataStreamResponse({
+                            execute: async () => {
+                                throw new Error(errorMessage);
+                            },
+                            onError: () => errorMessage,
+                        });
+                    }
+                }
+
                 const validatedBody = askSchema.parse(request.body);
                 const validatedQuery = askQuerySchema.parse(request.query);
 
@@ -127,8 +178,6 @@ export const registerRoutes = async (fastify: FastifyInstance) => {
                         role: msg.role as "user" | "assistant" | "system",
                         content: msg.content,
                     }));
-                } else if (validatedBody.question) {
-                    question = validatedBody.question;
                 } else {
                     throw new Error("No question or messages provided");
                 }

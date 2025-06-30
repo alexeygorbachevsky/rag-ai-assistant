@@ -6,6 +6,10 @@
   align-items: center;
   box-shadow: 0 1px 0 #ffffff0d;
 
+  @media (max-width: 360px) {
+    padding: 0 16px;
+  }
+
   .sidebarButton {
     margin-right: 12px;
     padding: 0 8px;

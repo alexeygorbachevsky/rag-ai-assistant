@@ -1,0 +1,106 @@
+#!/usr/bin/env node
+
+import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
+import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
+import { QdrantVectorStore } from "@langchain/qdrant";
+
+// import { UserCollectionDataLoader } from "../src/utils/userCollectionDataLoader";
+import { MIACollectionDataLoader } from "../src/utils/miaCollectionDataLoader";
+import { validateEnv } from "../src/config/env";
+
+const uploadMIACollection = async () => {
+    const envConfig = validateEnv(process.env);
+
+    const dataLoader = new MIACollectionDataLoader();
+
+    const embeddings = new HuggingFaceInferenceEmbeddings({
+        // model: "sentence-transformers/all-mpnet-base-v2",
+        model: "sentence-transformers/all-MiniLM-L6-v2",
+        apiKey: envConfig.HF_API_TOKEN,
+    });
+
+    const textSplitter = new RecursiveCharacterTextSplitter({
+        chunkSize: 1000,
+        chunkOverlap: 100,
+    });
+
+    const vectorStore = new QdrantVectorStore(embeddings, {
+        url: envConfig.QDRANT_URL,
+        apiKey: envConfig.QDRANT_API_KEY,
+        collectionName: "mia_collection",
+    });
+
+    try {
+        console.log("Loading files from MIA collection...");
+        const files = await dataLoader.loadAllFiles();
+
+        if (!files.length) {
+            console.error("No files found in MIA collection");
+            process.exit(1);
+        }
+
+        const BATCH_SIZE = 10;
+        let totalUploaded = 0;
+
+        for (let i = 0; i < files.length; i += BATCH_SIZE) {
+            const batch = files.slice(i, i + BATCH_SIZE);
+
+            const batchPromises = batch.map(async file => {
+                try {
+                    const content = dataLoader.formatArtworkForEmbedding(file);
+
+                    if (!content.trim()) {
+                        return [];
+                    }
+
+                    const chunks = await textSplitter.createDocuments(
+                        [content],
+                        [
+                            {
+                                objectId: file.id,
+                                object_name: file.object_name,
+                                title: file.title || "Untitled",
+                                artist: file.artist || "Unknown",
+                                country: file.country,
+                                continent: file.continent,
+                                dated: file.dated,
+                                filename: file.filename,
+                                // culture: file.culture,
+                                // style: file.style,
+                                // classification: file.classification,
+                                // source: file.source || "mia_collection",
+                                // medium: file.medium,
+                                // begin: file.begin ? String(file.begin) : undefined,
+                                // end: file.end ? String(file.end) : undefined,
+                            },
+                        ],
+                    );
+
+                    return chunks;
+                } catch (error) {
+                    console.error(`Error processing file ${file.filename}:`, error);
+                    return [];
+                }
+            });
+
+            const batchResults = await Promise.all(batchPromises);
+
+            const batchDocuments = batchResults.flat();
+
+            if (batchDocuments.length) {
+                await vectorStore.addDocuments(batchDocuments);
+                totalUploaded += batchDocuments.length;
+
+                console.log("Loaded:", totalUploaded);
+            }
+        }
+    } catch (error) {
+        console.error("Error uploading MIA collection:", error);
+        process.exit(1);
+    }
+};
+
+uploadMIACollection().catch(error => {
+    console.error("Fatal error in uploadMIACollection:", error);
+    process.exit(1);
+});

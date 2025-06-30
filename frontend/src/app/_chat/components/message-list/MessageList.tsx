@@ -16,38 +16,11 @@ interface MessagesListProps {
 const MessageList = ({ messages, isLoading = false }: MessagesListProps) => {
     const messagesRef = useRef<HTMLDivElement>(null);
 
-    const isAtBottom = () => {
-        if (!messagesRef.current) {
-            return true;
-        }
-
-        const { scrollTop, scrollHeight, clientHeight } = messagesRef.current;
-
-        return scrollHeight - scrollTop - clientHeight < 100;
-    };
-
-    const scrollToBottom = () => {
+    useEffect(() => {
         if (messagesRef.current) {
-            messagesRef.current.scrollTo({
-                top: messagesRef.current.scrollHeight - messagesRef.current.clientHeight,
-                behavior: "smooth",
-            });
+            messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
         }
-    };
-
-    useEffect(() => {
-        scrollToBottom();
-    }, [messages.length, isLoading]);
-
-    useEffect(() => {
-        if (messages.length > 0) {
-            const lastMessage = messages[messages.length - 1];
-
-            if (lastMessage?.role === "assistant" && isAtBottom()) {
-                scrollToBottom();
-            }
-        }
-    }, [messages[messages.length - 1]?.content]);
+    }, [messages, isLoading]);
 
     return (
         <section className={styles.messagesScrollWrapper} ref={messagesRef}>
@@ -64,3 +37,4 @@ const MessageList = ({ messages, isLoading = false }: MessagesListProps) => {
 };
 
 export default MessageList;
+

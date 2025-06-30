@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import joinClassNames from "classnames";
 import { useChat } from "@ai-sdk/react";
+import { toast } from "react-toastify";
 
 import Sidebar from "./_chat/components/sidebar";
 import Header from "./_chat/components/header";
@@ -31,13 +32,20 @@ const Chat = () => {
         }
     }, [searchParams, router]);
 
-    const { messages, input, setInput, handleSubmit, error, status } = useChat({
+    const { messages, input, setInput, handleSubmit, status, stop } = useChat({
         api: `http://localhost:3001/ask?mode=${chatMode}`,
+        onError: (error) => {
+            toast.error(error.message);
+        },
     });
 
     const onSubmit = () => {
         handleSubmit();
         setInput("");
+    };
+
+    const onStop = () => {
+        stop();
     };
 
     const toggleSidebar = () => {
@@ -73,13 +81,28 @@ const Chat = () => {
             <main className={joinClassNames(styles.mainArea, { [styles.mainAreaExpended]: !isSidebarOpened })}>
                 <Header isSidebarOpened={isSidebarOpened} onToggleSidebar={toggleSidebar} />
 
-                <MessageList messages={messages} isLoading={shouldShowTypingIndicator} />
+                {messages.length > 0 ? (
+                    <MessageList messages={messages} isLoading={shouldShowTypingIndicator} />
+                ) : (
+                    <div className={styles.emptyStateContainer}>
+                        <div className={styles.rateLimitInfo}>
+                            <div className={styles.rateLimitContent}>
+                                <h3 className={styles.rateLimitTitle}>Usage Limits</h3>
+                                <p className={styles.rateLimitDescription}>
+                                    To ensure quality service for all users, there are <strong>daily usage limits</strong>.
+                                    Usage limits help maintain reliable service while managing operational costs.
+                                </p>
+                                <div className={styles.rateLimitTips}>
+                                    <span>Make your questions as specific as possible for the best results</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {!messages.length && <p className={styles.chatTitle}>What can I help with?</p>}
 
-                {error && <div className={styles.error}>Error: {error.message}</div>}
-
-                <ChatInput input={input} setInput={setInput} onSubmit={onSubmit} />
+                <ChatInput input={input} setInput={setInput} onSubmit={onSubmit} onStop={onStop} status={status} />
             </main>
         </div>
     );
