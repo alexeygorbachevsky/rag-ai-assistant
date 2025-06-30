@@ -5,6 +5,7 @@ import { Dropdown } from "components";
 import SidebarIcon from "icons/sidebar.svg";
 
 import { ChatMode } from "constants/chat";
+import { LanguageModels } from "constants/models";
 
 import styles from "./styles/styles.module.scss";
 
@@ -14,9 +15,12 @@ interface SidebarProps {
     onSendRagData?: (files: File[]) => void;
     chatMode: ChatMode;
     onChatModeChange: (mode: ChatMode) => void;
+    selectedModel: LanguageModels;
+    onModelChange: (model: LanguageModels) => void;
+    onDeleteChats: () => void;
 }
 
-const Sidebar = ({ isOpened, onToggle, chatMode, onChatModeChange }: SidebarProps) => {
+const Sidebar = ({ isOpened, onToggle, chatMode, onChatModeChange, selectedModel, onModelChange, onDeleteChats }: SidebarProps) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -96,6 +100,11 @@ const Sidebar = ({ isOpened, onToggle, chatMode, onChatModeChange }: SidebarProp
     //     fileInputRef.current?.click();
     // }
 
+    const modelOptions = Object.values(LanguageModels).map(model => ({
+        value: model,
+        label: model.replace(/[-:]/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+    }));
+
     const handleModeChange = useCallback(
         (mode: ChatMode) => {
             onChatModeChange(mode);
@@ -109,6 +118,10 @@ const Sidebar = ({ isOpened, onToggle, chatMode, onChatModeChange }: SidebarProp
         [onChatModeChange],
     );
 
+    const handleDeleteChats = () => {
+        onDeleteChats();
+    };
+
     return (
         <>
             {isOpened && <div className={styles.overlay} onClick={onToggle} />}
@@ -118,6 +131,14 @@ const Sidebar = ({ isOpened, onToggle, chatMode, onChatModeChange }: SidebarProp
                 </button>
 
                 <div className={styles.content}>
+                    <div className={styles.chatModeSection}>
+                        <label className={styles.sectionLabel}>Language model:</label>
+                        <Dropdown
+                            options={modelOptions}
+                            value={selectedModel}
+                            onChange={onModelChange}
+                        />
+                    </div>
                     <div className={styles.chatModeSection}>
                         <label className={styles.sectionLabel}>Chat mode:</label>
                         <Dropdown
@@ -195,6 +216,31 @@ const Sidebar = ({ isOpened, onToggle, chatMode, onChatModeChange }: SidebarProp
                     {/*        </button>*/}
                     {/*    </div>*/}
                     {/*)}*/}
+                    
+                    {chatMode === ChatMode["mia-collection"] && (
+                        <div className={styles.miaInfoSection}>
+                            <div className={styles.miaInfoContent}>
+                                <div className={styles.miaInfoHeader}>
+                                    <h4 className={styles.miaInfoTitle}>MIA Collection Mode</h4>
+                                </div>
+                                <p className={styles.miaInfoText}>
+                                    You&apos;re now in collection mode! Ask questions about artworks from the Minneapolis Institute of Art collection.
+                                </p>
+                                <a 
+                                    href="https://github.com/artsmia/collection/tree/main" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className={styles.miaRepoLink}
+                                >
+                                    View Collection Data →
+                                </a>
+                            </div>
+                        </div>
+                    )}
+                    
+                    <button className={styles.deleteChatButton} onClick={handleDeleteChats}>
+                        Delete chat
+                    </button>
                 </div>
             </aside>
         </>

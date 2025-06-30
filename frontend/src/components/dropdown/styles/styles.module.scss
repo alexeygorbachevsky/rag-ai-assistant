@@ -10,42 +10,43 @@
     align-items: center;
     justify-content: space-between;
     padding: 10px 12px;
-    background: #3a3a3a;
+    background: #2c2c2c;
     border: none;
     border-radius: 6px;
     color: #ffffff;
     font-size: 14px;
     font-weight: 400;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease;
 
     &:hover {
-        background: #404040;
+        background: #333333;
     }
 
     &.open {
-        background: #404040;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
+        background: #333333;
     }
 
     &:focus {
         outline: none;
-        border: none;
     }
 
     &:focus-visible {
-        border: 1px solid #ffffff;
+        outline: none;
+        box-shadow: inset 0 0 0 1px #ffffff;
     }
 }
 
 .selectedText {
     flex: 1;
     text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .arrow {
-    color: #ccc;
+    color: #ffffff;
     transition: transform 0.2s ease;
     flex-shrink: 0;
     margin-left: 8px;
@@ -60,11 +61,13 @@
     top: 100%;
     left: 0;
     right: 0;
-    background: #3a3a3a;
-    border-radius: 0 0 6px 6px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    background: #2c2c2c;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     z-index: 1000;
     overflow: hidden;
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .option {
@@ -77,24 +80,69 @@
     border: none;
     color: #ffffff;
     font-size: 14px;
-    font-weight: 400;
     cursor: pointer;
     transition: background-color 0.15s ease;
+    min-height: 40px;
+    max-height: 40px;
 
     &:hover,
     &.highlighted {
-        background: #4a4a4a;
+        background: #3c3c3c;
+    }
+
+    &.selected {
+        background: transparent;
+
+        &:hover,
+        &.highlighted {
+            background: #3c3c3c;
+        }
     }
 
     &:focus {
         outline: none;
-        background: #4a4a4a;
+        background: #3c3c3c;
     }
 }
 
-.optionText {
+.optionContent {
+    display: flex;
+    align-items: center;
     flex: 1;
-    text-align: left;
+    gap: 10px;
+}
+
+.optionIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    color: #ffffff;
+    flex-shrink: 0;
+}
+
+.optionTextContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1;
+}
+
+.optionText {
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.optionDescription {
+    font-size: 12px;
+    color: #999999;
+    font-weight: 400;
+    line-height: 1.2;
 }
 
 .checkmark {

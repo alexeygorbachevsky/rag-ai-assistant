@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { ReactNode, useState, useRef, useEffect } from "react";
 import joinClassNames from "classnames";
 
 import styles from "./styles/styles.module.scss";
@@ -6,6 +6,8 @@ import styles from "./styles/styles.module.scss";
 interface DropdownOption<T> {
     value: T;
     label: string;
+    icon?: ReactNode;
+    description?: string;
 }
 
 interface DropdownProps<T> {
@@ -30,9 +32,9 @@ const Dropdown = <T,>({ options, value, onChange, className }: DropdownProps<T>)
             }
         };
 
-        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener("mousedown", handleClickOutside);
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
 
@@ -73,7 +75,7 @@ const Dropdown = <T,>({ options, value, onChange, className }: DropdownProps<T>)
                     handleToggle();
                 }
                 break;
-            case 'ArrowDown':
+            case "ArrowDown":
                 event.preventDefault();
                 if (!isOpen) {
                     handleToggle();

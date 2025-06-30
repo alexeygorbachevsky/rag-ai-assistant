@@ -3,12 +3,13 @@ import { QdrantVectorStore } from "@langchain/qdrant";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { streamText } from "ai";
+import { FastifyBaseLogger } from "fastify";
 
 import type { SearchResult } from "../types/index.js";
-
+import { LanguageModels } from "../constants/models.js";
 import { RedisCacheService } from "./redisCacheService.js";
+
 // import { StreamCacheUtil } from "../utils/streamCache.js";
-import { FastifyBaseLogger } from "fastify";
 
 export class RAGService {
     private embeddings!: HuggingFaceInferenceEmbeddings;
@@ -52,13 +53,23 @@ export class RAGService {
         }
     }
 
-    async ask(messages?: Array<{ role: "user" | "assistant"; content: string }>): Promise<Response> {
+    private convertModelName(modelName?: string) {
+        return LanguageModels[modelName as keyof typeof LanguageModels] || LanguageModels["deepseek-chat-v3-0324"];
+    }
+
+    async ask(
+        messages?: Array<{
+            role: "user" | "assistant";
+            content: string;
+        }>,
+        modelName?: string,
+    ): Promise<Response> {
         try {
             const response = streamText({
-                model: this.openrouter("deepseek/deepseek-chat-v3-0324"),
+                model: this.openrouter(this.convertModelName(modelName)),
                 messages,
-                temperature: 0.3,
-                maxTokens: 512,
+                // temperature: 0.3,
+                // maxTokens: 512,
             });
 
             return response.toDataStreamResponse();
@@ -76,6 +87,7 @@ export class RAGService {
         question: string,
         conversationHistory: Array<{ role: "user" | "assistant" | "system"; content: string }> = [],
         startTime: number,
+        modelName?: string,
     ): Promise<Response> {
         const ragStartTime = Date.now();
 
@@ -94,11 +106,11 @@ export class RAGService {
                 throw new Error("Vector store not initialized");
             }
 
-            const searchResults = await this.vectorStore.similaritySearchWithScore(question, 250);
+            const searchResults = await this.vectorStore.similaritySearchWithScore(question, 100);
             const searchTime = Date.now() - searchStartTime;
 
             const finalResults = searchResults
-                .filter(([{ metadata }, score]) => score > 0.5 && !metadata.title.toLowerCase().includes("untitled"))
+                .filter(([_doc, score]) => score > 0.5)
                 .sort(([, scoreA], [, scoreB]) => scoreB - scoreA);
 
             console.log("finalResults", finalResults);
@@ -118,13 +130,12 @@ export class RAGService {
             this.logger?.info(`Retrieved sources: [${sources.join(", ")}]`);
 
             const context = contexts.join("\n\n");
+            console.log("context", context);
             const messages = await this.buildPrompt(question, context, sources, conversationHistory);
 
             const llmStartTime = Date.now();
             const response = streamText({
-                // mistralai/mistral-small-3.2-24b-instruct
-                // deepseek/deepseek-chat-v3-0324
-                model: this.openrouter("deepseek/deepseek-chat-v3-0324"),
+                model: this.openrouter(this.convertModelName(modelName)),
                 messages,
                 onFinish: async result => {
                     const processingTime = Date.now() - startTime;

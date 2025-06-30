@@ -12,6 +12,7 @@ import MessageList from "./_chat/components/message-list";
 import ChatInput from "./_chat/components/chat-input";
 
 import { ChatMode } from "constants/chat";
+import { LanguageModels } from "constants/models";
 
 import styles from "./_chat/styles/styles.module.scss";
 
@@ -21,20 +22,33 @@ const Chat = () => {
     const router = useRouter();
 
     const chatMode = (searchParams.get("mode") as ChatMode) || "mia-collection";
+    const selectedModel = (searchParams.get("model") as LanguageModels) || LanguageModels["deepseek-chat-v3-0324"];
+
+    const mode = searchParams.get("mode") as ChatMode;
+    const model = searchParams.get("model") as LanguageModels;
 
     useEffect(() => {
-        const mode = searchParams.get("mode") as ChatMode;
+        const params = new URLSearchParams(searchParams.toString());
+        let shouldUpdate = false;
 
         if (!ChatMode[mode]) {
-            const params = new URLSearchParams(searchParams.toString());
             params.set("mode", "mia-collection");
+            shouldUpdate = true;
+        }
+
+        if (!LanguageModels[model]) {
+            params.set("model", LanguageModels["deepseek-chat-v3-0324"]);
+            shouldUpdate = true;
+        }
+
+        if (shouldUpdate) {
             router.replace(`?${params.toString()}`);
         }
-    }, [searchParams, router]);
+    }, [mode, model, router]);
 
-    const { messages, input, setInput, handleSubmit, status, stop } = useChat({
-        api: `http://localhost:3001/ask?mode=${chatMode}`,
-        onError: (error) => {
+    const { messages, input, setInput, handleSubmit, status, stop, setMessages } = useChat({
+        api: `http://localhost:3001/ask?mode=${chatMode}&model=${selectedModel}`,
+        onError: error => {
             toast.error(error.message);
         },
     });
@@ -58,11 +72,21 @@ const Chat = () => {
         router.push(`?${params.toString()}`);
     };
 
+    const handleModelChange = (model: LanguageModels) => {
+        const params = new URLSearchParams(searchParams.toString());
+        params.set("model", model);
+        router.push(`?${params.toString()}`);
+    };
+
     const handleSendRagData = (files: File[]) => {
         if (files.length > 0) {
             const fileNames = files.map(file => file.name).join(", ");
             setInput(`RAG Files: ${fileNames}`);
         }
+    };
+
+    const handleDeleteChats = () => {
+        setMessages([]);
     };
 
     const shouldShowTypingIndicator =
@@ -76,6 +100,9 @@ const Chat = () => {
                 onSendRagData={handleSendRagData}
                 chatMode={chatMode}
                 onChatModeChange={handleChatModeChange}
+                selectedModel={selectedModel}
+                onModelChange={handleModelChange}
+                onDeleteChats={handleDeleteChats}
             />
 
             <main className={joinClassNames(styles.mainArea, { [styles.mainAreaExpended]: !isSidebarOpened })}>
@@ -89,8 +116,9 @@ const Chat = () => {
                             <div className={styles.rateLimitContent}>
                                 <h3 className={styles.rateLimitTitle}>Usage Limits</h3>
                                 <p className={styles.rateLimitDescription}>
-                                    To ensure quality service for all users, there are <strong>daily usage limits</strong>.
-                                    Usage limits help maintain reliable service while managing operational costs.
+                                    To ensure quality service for all users, there are{" "}
+                                    <strong>daily usage limits</strong>. These limits help maintain reliable service
+                                    while managing operational costs.
                                 </p>
                                 <div className={styles.rateLimitTips}>
                                     <span>Make your questions as specific as possible for the best results</span>
@@ -108,12 +136,10 @@ const Chat = () => {
     );
 };
 
-const ChatPage = () => {
-    return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <Chat />
-        </Suspense>
-    );
-};
+const ChatPage = () => (
+    <Suspense fallback={<div>Loading...</div>}>
+        <Chat />
+    </Suspense>
+);
 
 export default ChatPage;

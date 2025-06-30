@@ -16,6 +16,7 @@ const askSchema = z.object({
 
 const askQuerySchema = z.object({
     mode: z.string().optional(),
+    model: z.string().optional(),
 });
 
 export const registerRoutes = async (fastify: FastifyInstance) => {
@@ -81,6 +82,10 @@ export const registerRoutes = async (fastify: FastifyInstance) => {
                         mode: {
                             type: "string",
                             description: "Mode for the AI system (e.g., 'mia-collection')",
+                        },
+                        model: {
+                            type: "string",
+                            description: "Language model to use for the response",
                         },
                     },
                 },
@@ -183,8 +188,9 @@ export const registerRoutes = async (fastify: FastifyInstance) => {
                 }
 
                 const mode = validatedQuery.mode;
+                const model = validatedQuery.model;
 
-                fastify.log.info(`Question received: "${question}", Mode: "${mode}"`);
+                fastify.log.info(`Question received: "${question}", Mode: "${mode}", Model: "${model}"`);
 
                 if (!isInitialized) {
                     isInitialized = true;
@@ -195,10 +201,10 @@ export const registerRoutes = async (fastify: FastifyInstance) => {
                 reply.header("Access-Control-Allow-Headers", "Content-Type, Accept");
 
                 if (mode === "general-chat") {
-                    return fastify.ragService.ask(validatedBody.messages);
+                    return fastify.ragService.ask(validatedBody.messages, model);
                 }
 
-                return fastify.ragService.askRAG(question, conversationHistory, startTime);
+                return fastify.ragService.askRAG(question, conversationHistory, startTime, model);
             } catch (err: unknown) {
                 const error = err as Error;
                 console.log("error", error);

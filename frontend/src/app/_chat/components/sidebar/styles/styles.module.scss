@@ -198,6 +198,75 @@
     margin-bottom: 24px;
   }
 
+  .miaInfoSection {
+    background: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.35);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 16px;
+    backdrop-filter: blur(5px);
+  }
+
+  .miaInfoContent {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .miaInfoText {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  .miaRepoLink {
+    color: #3B82F6;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 6px 0;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    align-self: flex-start;
+
+    &:hover {
+      color: #60A5FA;
+      text-decoration: underline;
+      text-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+    }
+  }
+
+  .deleteChatButton {
+    padding: 8px 16px;
+    background: transparent;
+    color: #ff4444;
+    border: 2px solid #ff4444;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    margin-top: auto;
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    flex-shrink: 0;
+
+    &:hover {
+      background: #ff4444;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(255, 68, 68, 0.3);
+    }
+
+    &:active {
+      background: #dd3333;
+      color: #ffffff;
+      box-shadow: 0 1px 4px rgba(255, 68, 68, 0.3);
+    }
+  }
+
   .chatTitle {
     font-weight: 600;
     font-size: 1.1rem;
