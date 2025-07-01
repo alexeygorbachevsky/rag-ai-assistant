@@ -4,7 +4,7 @@ import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
 import { QdrantVectorStore } from "@langchain/qdrant";
 
-import { MIACollectionDataLoader } from "./utils/miaCollectionDataLoader";
+import { MIACollectionDataLoader } from "./utils/miaCollectionDataLoader.js";
 
 const uploadMIACollection = async () => {
     const dataLoader = new MIACollectionDataLoader();

@@ -4,7 +4,7 @@ import type { FastifyBaseLogger } from "fastify";
 
 import type { CoreMessage } from "ai";
 
-import { LanguageModels } from "../constants/models";
+import { LanguageModels } from "../constants/models.js";
 
 export interface LLMConfig {
     apiKey: string;

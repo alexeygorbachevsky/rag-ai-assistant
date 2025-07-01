@@ -5,7 +5,3 @@ dist
 *.log
 .git
 .gitignore
-README.md
-tsconfig.json
-eslint.config.mjs
-yarn.lock 

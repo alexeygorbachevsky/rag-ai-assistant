@@ -15,6 +15,7 @@ import { ChatMode } from "constants/chat";
 import { LanguageModels } from "constants/models";
 
 import styles from "./_chat/styles/styles.module.scss";
+import { RAG_API } from "../constants/api";
 
 const Chat = () => {
     const [isSidebarOpened, setIsSidebarOpened] = useState(true);
@@ -47,7 +48,7 @@ const Chat = () => {
     }, [mode, model, router]);
 
     const { messages, input, setInput, handleSubmit, status, stop, setMessages } = useChat({
-        api: `http://localhost:3001/ask?mode=${chatMode}&model=${selectedModel}`,
+        api: `${RAG_API}/ask?mode=${chatMode}&model=${selectedModel}`,
         onError: error => {
             toast.error(error.message);
         },

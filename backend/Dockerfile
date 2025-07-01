@@ -2,11 +2,11 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm ci --only=production
+COPY package*.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
 COPY . .
-RUN npm run build
+RUN yarn build
 
 EXPOSE 7860
-CMD ["npm", "start"] 
+CMD ["yarn", "start"]

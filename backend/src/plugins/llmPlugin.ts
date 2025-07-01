@@ -1,8 +1,8 @@
 import fp from "fastify-plugin";
 import type { FastifyInstance } from "fastify";
 
-import { LLMService, type LLMConfig } from "../services/llmService";
-import { LanguageModels } from "../constants/models";
+import { LLMService, type LLMConfig } from "../services/llmService.js";
+import { LanguageModels } from "../constants/models.js";
 
 declare module "fastify" {
     interface FastifyInstance {

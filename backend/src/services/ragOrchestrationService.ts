@@ -2,11 +2,11 @@ import type { FastifyBaseLogger } from "fastify";
 import type { CoreMessage } from "ai";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 
-import type { VectorStoreService } from "./vectorStoreService";
-import type { LLMService } from "./llmService";
-import type { RedisCacheService } from "./redisCacheService";
-import type { SearchResult } from "../types";
-import { StreamCacheUtil } from "../utils/streamCache";
+import type { VectorStoreService } from "./vectorStoreService.js";
+import type { LLMService } from "./llmService.js";
+import type { RedisCacheService } from "./redisCacheService.js";
+import type { SearchResult } from "../types/index.js";
+import { StreamCacheUtil } from "../utils/streamCache.js";
 
 export interface RAGConfig {
     scoreThreshold: number;
