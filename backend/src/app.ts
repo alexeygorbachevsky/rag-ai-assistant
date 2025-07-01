@@ -64,11 +64,9 @@ const start = async () => {
         setupShutdown();
 
         await fastify.listen({
-            port: Number(process.env.PORT),
-            host: process.env.HOST,
+            port: Number(process.env.PORT) || 7860,
+            host: process.env.HOST || "0.0.0.0",
         });
-
-        fastify.log.info(`Server listening on ${process.env.HOST}:${process.env.PORT}`);
     } catch (err) {
         fastify.log.error(err);
         process.exit(1);
