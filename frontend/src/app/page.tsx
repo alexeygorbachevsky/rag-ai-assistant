@@ -13,9 +13,9 @@ import ChatInput from "./_chat/components/chat-input";
 
 import { ChatMode } from "constants/chat";
 import { LanguageModels } from "constants/models";
+import { RAG_API } from "constants/api";
 
 import styles from "./_chat/styles/styles.module.scss";
-import { RAG_API } from "../constants/api";
 
 const Chat = () => {
     const [isSidebarOpened, setIsSidebarOpened] = useState(true);
