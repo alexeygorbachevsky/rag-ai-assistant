@@ -4,19 +4,14 @@ import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
 import { QdrantVectorStore } from "@langchain/qdrant";
 
-// import { UserCollectionDataLoader } from "../src/utils/userCollectionDataLoader";
-import { MIACollectionDataLoader } from "../src/utils/miaCollectionDataLoader";
-import { validateEnv } from "../src/config/env";
+import { MIACollectionDataLoader } from "./utils/miaCollectionDataLoader";
 
 const uploadMIACollection = async () => {
-    const envConfig = validateEnv(process.env);
-
     const dataLoader = new MIACollectionDataLoader();
 
     const embeddings = new HuggingFaceInferenceEmbeddings({
-        // model: "sentence-transformers/all-mpnet-base-v2",
         model: "sentence-transformers/all-MiniLM-L6-v2",
-        apiKey: envConfig.HF_API_TOKEN,
+        apiKey: process.env.HF_API_TOKEN,
     });
 
     const textSplitter = new RecursiveCharacterTextSplitter({
@@ -25,8 +20,8 @@ const uploadMIACollection = async () => {
     });
 
     const vectorStore = new QdrantVectorStore(embeddings, {
-        url: envConfig.QDRANT_URL,
-        apiKey: envConfig.QDRANT_API_KEY,
+        url: process.env.QDRANT_URL,
+        apiKey: process.env.QDRANT_API_KEY,
         collectionName: "mia_collection",
     });
 
@@ -53,7 +48,7 @@ const uploadMIACollection = async () => {
                         return [];
                     }
 
-                    const chunks = await textSplitter.createDocuments(
+                    return await textSplitter.createDocuments(
                         [content],
                         [
                             {
@@ -65,18 +60,9 @@ const uploadMIACollection = async () => {
                                 continent: file.continent,
                                 dated: file.dated,
                                 filename: file.filename,
-                                // culture: file.culture,
-                                // style: file.style,
-                                // classification: file.classification,
-                                // source: file.source || "mia_collection",
-                                // medium: file.medium,
-                                // begin: file.begin ? String(file.begin) : undefined,
-                                // end: file.end ? String(file.end) : undefined,
                             },
                         ],
                     );
-
-                    return chunks;
                 } catch (error) {
                     console.error(`Error processing file ${file.filename}:`, error);
                     return [];

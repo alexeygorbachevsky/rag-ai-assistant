@@ -2,9 +2,10 @@ export class StreamCacheUtil {
     private static readonly CHUNK_DELAY = 30;
     private static readonly ENCODER = new TextEncoder();
 
-    static createSimpleStreamResponse(answer: string, _sources: string[]): Response {
+    static createSimpleStreamResponse(answer: string, sources: string[]): Response {
         const encoder = StreamCacheUtil.ENCODER;
-        const chunks = StreamCacheUtil.chunkText(answer);
+        const fullText = sources?.length > 0 ? `${answer}\n\n**Sources:** ${sources.join(", ")}` : answer;
+        const chunks = StreamCacheUtil.chunkText(fullText);
 
         const stream = new ReadableStream<Uint8Array>({
             async start(controller) {

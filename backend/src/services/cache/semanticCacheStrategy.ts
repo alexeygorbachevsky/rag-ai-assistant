@@ -50,8 +50,6 @@ export class SemanticCacheStrategy implements CacheKeyStrategy {
                 const cached: SemanticCacheEntry = JSON.parse(cachedData);
                 const similarity = this.cosineSimilarity(questionEmbedding, cached.embedding);
 
-                console.log("similarity", similarity);
-
                 if (similarity > this.similarityThreshold && similarity > bestSimilarity) {
                     bestMatch = cached;
                     bestSimilarity = similarity;

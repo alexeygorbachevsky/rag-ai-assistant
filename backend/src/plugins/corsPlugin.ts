@@ -1,10 +1,8 @@
 import type { FastifyPluginAsync } from "fastify";
 import cors from "@fastify/cors";
 
-import type { EnvConfig } from "../config/env.js";
-
 interface CorsPluginOptions {
-    envConfig: EnvConfig;
+    envConfig: NodeJS.ProcessEnv;
 }
 
 const corsPlugin: FastifyPluginAsync<CorsPluginOptions> = async function (fastify, opts) {

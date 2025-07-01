@@ -4,18 +4,9 @@ export interface CacheEntry {
     timestamp: number;
 }
 
-export interface CacheConfig {
-    ttl: number;
-    keyPrefix: string;
-    enabled: boolean;
-}
-
 export interface CacheService {
     get(key: string): Promise<CacheEntry | null>;
     set(key: string, entry: CacheEntry, ttl?: number): Promise<void>;
-    del(key: string): Promise<void>;
-    exists(key: string): Promise<boolean>;
-    flushAll(): Promise<void>;
     disconnect(): Promise<void>;
 }
 

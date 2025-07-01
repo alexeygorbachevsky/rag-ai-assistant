@@ -1,21 +1,3 @@
-import { z } from "zod";
-
-const envSchema = z.object({
-    HF_API_TOKEN: z.string().min(1, "HuggingFace API token is required"),
-    OPENROUTER_API_KEY: z.string().min(1, "OpenRouter API key is required"),
-    QDRANT_URL: z.string().url("Valid Qdrant URL is required"),
-    QDRANT_API_KEY: z.string().optional(),
-    REDIS_HOST: z.string().default("localhost"),
-    REDIS_PORT: z.coerce.number().default(6379),
-    REDIS_PASSWORD: z.string().optional(),
-    REDIS_DB: z.coerce.number().default(0),
-    PORT: z.coerce.number().default(3001),
-    HOST: z.string().default("0.0.0.0"),
-    NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
-});
-
-export type EnvConfig = z.infer<typeof envSchema>;
-
 export const fastifyEnvSchema = {
     type: "object",
     properties: {
@@ -70,13 +52,19 @@ export const fastifyEnvSchema = {
             default: "development",
             description: "Environment mode",
         },
+        SKIPPED_IP: {
+            type: "string",
+            description: "IP address to skip rate limiting (optional)",
+        },
+        GLOBAL_DAILY_LIMIT: {
+            type: "integer",
+            default: 10,
+            description: "Global daily request limit",
+        },
+        ENABLE_CACHE: {
+            type: "boolean",
+            default: false,
+            description: "Enable caching for RAG responses",
+        },
     },
-};
-
-export const validateEnv = (processEnv: NodeJS.ProcessEnv): EnvConfig => {
-    try {
-        return envSchema.parse(processEnv);
-    } catch (error) {
-        process.exit(1);
-    }
 };

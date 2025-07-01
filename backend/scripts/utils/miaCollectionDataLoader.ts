@@ -37,6 +37,7 @@ export class MIACollectionDataLoader {
                 for (let fileIndex = 0; fileIndex < jsonFiles.length; fileIndex++) {
                     const file = jsonFiles[fileIndex];
                     const result = await this.loadSingleFile(join(dirPath, file));
+
                     if (result) {
                         validResults.push(result);
                     }
@@ -82,15 +83,11 @@ export class MIACollectionDataLoader {
                 classification: data.classification,
                 object_name: data.object_name,
                 nationality: data.nationality,
-                // medium: data.medium,
-                // inscription: data.inscription,
-                // markings: data.markings,
             };
 
             this.processedCount++;
             return artwork;
-        } catch (error) {
-            // Silently ignore parsing errors for invalid JSON files
+        } catch {
             return null;
         }
     }
@@ -147,14 +144,6 @@ export class MIACollectionDataLoader {
         } else if (artwork.end) {
             sections.push(`Period: until ${artwork.end}`);
         }
-
-        // if (artwork.inscription && artwork.inscription.length > 5) {
-        //     sections.push(`Inscription: ${artwork.inscription}`);
-        // }
-        //
-        // if (artwork.markings && artwork.markings.length > 5) {
-        //     sections.push(`Markings: ${artwork.markings}`);
-        // }
 
         return sections.join(". ");
     }

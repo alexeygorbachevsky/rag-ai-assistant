@@ -1,0 +1,36 @@
+import fp from "fastify-plugin";
+import type { FastifyInstance } from "fastify";
+
+import { VectorStoreService } from "../services/vectorStoreService.js";
+import { VectorRepository, type VectorRepositoryConfig } from "../repositories/vectorRepository.js";
+
+declare module "fastify" {
+    interface FastifyInstance {
+        vectorStoreService: VectorStoreService;
+    }
+}
+
+async function vectorStorePlugin(fastify: FastifyInstance) {
+    const config: VectorRepositoryConfig = {
+        url: process.env.QDRANT_URL as string,
+        apiKey: process.env.QDRANT_API_KEY as string,
+        collectionName: "mia_collection",
+        embeddingModel: "sentence-transformers/all-MiniLM-L6-v2",
+        embeddingApiKey: process.env.HF_API_TOKEN as string,
+    };
+
+    const vectorRepository = new VectorRepository(config, fastify.log);
+    const vectorStoreService = new VectorStoreService(vectorRepository, fastify.log);
+
+    await vectorStoreService.initialize();
+    fastify.decorate("vectorStoreService", vectorStoreService);
+
+    fastify.addHook("onClose", async () => {
+        await vectorStoreService.disconnect();
+    });
+}
+
+export default fp(vectorStorePlugin, {
+    name: "vector-store-service",
+    dependencies: [],
+});
