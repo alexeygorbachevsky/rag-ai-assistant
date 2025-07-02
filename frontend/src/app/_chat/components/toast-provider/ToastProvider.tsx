@@ -2,8 +2,7 @@
 
 import { ToastContainer } from "react-toastify";
 
-const ToastProvider = () =>
-(
+const ToastProvider = () => (
     <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -17,6 +16,5 @@ const ToastProvider = () =>
         theme="dark"
     />
 );
-
 
 export default ToastProvider;

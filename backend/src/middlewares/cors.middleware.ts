@@ -1,6 +1,7 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
 
 export const corsHeaders = (reply: FastifyReply) => {
+    // FIXME: allow all origins temporarily
     reply.header("Access-Control-Allow-Origin", "*");
     reply.header("Access-Control-Allow-Methods", "POST, OPTIONS");
     reply.header("Access-Control-Allow-Headers", "Content-Type, Accept");

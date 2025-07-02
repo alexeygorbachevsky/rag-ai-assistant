@@ -15,11 +15,15 @@
     "format:fix": "prettier --write src/**/*.ts scripts/**/*.ts"
   },
   "keywords": [
-    "fastify",
-    "langchain",
     "rag",
     "ai",
-    "qdrant"
+    "ai-assistant",
+    "fastify",
+    "langchain",
+    "hugging-face",
+    "qdrant",
+    "open-router",
+    "redis"
   ],
   "author": "",
   "license": "MIT",

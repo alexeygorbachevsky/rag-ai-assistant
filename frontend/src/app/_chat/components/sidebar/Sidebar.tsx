@@ -4,7 +4,7 @@ import joinClassNames from "classnames";
 
 import SidebarIcon from "icons/sidebar.svg";
 
-import { Dropdown } from "components";
+import { Dropdown } from "components/dropdown";
 
 import { ChatMode } from "constants/chat";
 

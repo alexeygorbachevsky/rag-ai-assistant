@@ -1,5 +1,7 @@
-import { ReactNode, useState, useRef, useEffect } from "react";
+import { ReactNode, useState, useRef, useEffect, KeyboardEvent } from "react";
 import joinClassNames from "classnames";
+
+import Checkmark16Icon from "icons/checkmark16.svg"
 
 import styles from "./styles/styles.module.scss";
 
@@ -48,22 +50,22 @@ const Dropdown = <T,>({ options, value, onChange, className }: Props<T>) => {
         }
     };
 
-    const handleKeyDown = (event: React.KeyboardEvent) => {
+    const handleKeyDown = (event: KeyboardEvent) => {
         switch (event.key) {
-            case 'Tab':
+            case "Tab":
                 if (isOpen) {
                     setIsOpen(false);
                     setHighlightedIndex(-1);
                 }
                 break;
-            case 'Escape':
+            case "Escape":
                 if (isOpen) {
                     setIsOpen(false);
                     setHighlightedIndex(-1);
                 }
                 break;
-            case 'Enter':
-            case ' ':
+            case "Enter":
+            case " ":
                 event.preventDefault();
                 if (isOpen) {
                     if (highlightedIndex >= 0) {
@@ -80,19 +82,15 @@ const Dropdown = <T,>({ options, value, onChange, className }: Props<T>) => {
                 if (!isOpen) {
                     handleToggle();
                 } else {
-                    setHighlightedIndex(prev => 
-                        prev < options.length - 1 ? prev + 1 : 0
-                    );
+                    setHighlightedIndex(prev => (prev < options.length - 1 ? prev + 1 : 0));
                 }
                 break;
-            case 'ArrowUp':
+            case "ArrowUp":
                 event.preventDefault();
                 if (!isOpen) {
                     handleToggle();
                 } else {
-                    setHighlightedIndex(prev => 
-                        prev > 0 ? prev - 1 : options.length - 1
-                    );
+                    setHighlightedIndex(prev => (prev > 0 ? prev - 1 : options.length - 1));
                 }
                 break;
         }
@@ -109,19 +107,14 @@ const Dropdown = <T,>({ options, value, onChange, className }: Props<T>) => {
     };
 
     return (
-        <div 
-            ref={dropdownRef}
-            className={joinClassNames(styles.dropdown, className)}
-        >
+        <div ref={dropdownRef} className={joinClassNames(styles.dropdown, className)}>
             <button
                 type="button"
                 className={joinClassNames(styles.trigger, { [styles.open]: isOpen })}
                 onClick={handleToggle}
                 onKeyDown={handleKeyDown}
             >
-                <span className={styles.selectedText}>
-                    {selectedOption?.label || 'Select option'}
-                </span>
+                <span className={styles.selectedText}>{selectedOption?.label || "Select option"}</span>
                 <svg
                     className={joinClassNames(styles.arrow, { [styles.rotated]: isOpen })}
                     width="12"
@@ -147,30 +140,13 @@ const Dropdown = <T,>({ options, value, onChange, className }: Props<T>) => {
                             key={String(option.value)}
                             type="button"
                             className={joinClassNames(styles.option, {
-                                [styles.highlighted]: index === highlightedIndex
+                                [styles.highlighted]: index === highlightedIndex,
                             })}
                             onClick={() => handleOptionClick(option.value)}
                             onMouseEnter={() => handleOptionMouseEnter(index)}
                         >
                             <span className={styles.optionText}>{option.label}</span>
-                            {option.value === value && (
-                                <svg
-                                    className={styles.checkmark}
-                                    width="16"
-                                    height="16"
-                                    viewBox="0 0 16 16"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        d="M13.5 4.5L6 12L2.5 8.5"
-                                        stroke="currentColor"
-                                        strokeWidth="1.5"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
-                                </svg>
-                            )}
+                            {option.value === value && <Checkmark16Icon className={styles.checkmark} />}
                         </button>
                     ))}
                 </div>
@@ -179,4 +155,4 @@ const Dropdown = <T,>({ options, value, onChange, className }: Props<T>) => {
     );
 };
 
-export default Dropdown; 
+export default Dropdown;
