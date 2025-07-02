@@ -1,5 +1,5 @@
 import type { FastifyBaseLogger } from "fastify";
-import type { LimitRepository } from "../repositories/limitRepository.js";
+import type { LimitRepository } from "../repositories/limit.repository";
 
 export class GlobalLimitService {
     private limitRepository: LimitRepository;

@@ -63,8 +63,8 @@ export class CacheRepository {
     }
 
     async get(key: string): Promise<CacheEntry | null> {
-        if (!this.isConnected){
-            return null
+        if (!this.isConnected) {
+            return null;
         }
 
         try {
@@ -76,8 +76,8 @@ export class CacheRepository {
     }
 
     async set(key: string, value: CacheEntry, ttl: number): Promise<void> {
-        if (!this.isConnected){
-            return
+        if (!this.isConnected) {
+            return;
         }
 
         try {

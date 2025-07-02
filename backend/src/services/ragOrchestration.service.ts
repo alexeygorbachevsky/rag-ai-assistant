@@ -2,9 +2,9 @@ import type { FastifyBaseLogger } from "fastify";
 import type { CoreMessage } from "ai";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 
-import type { VectorStoreService } from "./vectorStoreService.js";
-import type { LLMService } from "./llmService.js";
-import type { RedisCacheService } from "./redisCacheService.js";
+import type { VectorStoreService } from "./vectorStore.service";
+import type { LLMService } from "./llm.service";
+import type { RedisCacheService } from "./redisCache.service";
 import type { SearchResult } from "../types/index.js";
 import { StreamCacheUtil } from "../utils/streamCache.js";
 
@@ -129,11 +129,7 @@ export class RAGOrchestrationService {
         sources: string[],
         conversationHistory: CoreMessage[] = [],
     ): Promise<CoreMessage[]> {
-        const sourcesText =
-            sources.length > 0
-                ? "\n\n**Sources:**\n" +
-                sources.map((source: string, index: number) => `${index + 1}. ${source}`).join("\n")
-                : "";
+        const sourcesText = sources.length > 0 ? "\n\n**Sources:**\n" + sources.join("\n") : "";
 
         const prompt = ChatPromptTemplate.fromMessages([
             [

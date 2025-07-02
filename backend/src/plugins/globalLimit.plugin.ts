@@ -1,8 +1,8 @@
 import fp from "fastify-plugin";
 import type { FastifyInstance } from "fastify";
 
-import { GlobalLimitService } from "../services/globalLimitService.js";
-import { LimitRepository, type LimitRepositoryConfig } from "../repositories/limitRepository.js";
+import { GlobalLimitService } from "../services/globalLimit.service";
+import { LimitRepository, type LimitRepositoryConfig } from "../repositories/limit.repository";
 
 declare module "fastify" {
     interface FastifyInstance {

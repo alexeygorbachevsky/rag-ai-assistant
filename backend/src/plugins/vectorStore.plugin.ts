@@ -1,8 +1,8 @@
 import fp from "fastify-plugin";
 import type { FastifyInstance } from "fastify";
 
-import { VectorStoreService } from "../services/vectorStoreService.js";
-import { VectorRepository, type VectorRepositoryConfig } from "../repositories/vectorRepository.js";
+import { VectorStoreService } from "../services/vectorStore.service";
+import { VectorRepository, type VectorRepositoryConfig } from "../repositories/vector.repository";
 import { EMBEDDING_MODEL } from "../../scripts/constants/embeddings";
 
 declare module "fastify" {

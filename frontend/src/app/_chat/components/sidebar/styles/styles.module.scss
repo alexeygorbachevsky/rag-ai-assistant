@@ -10,6 +10,13 @@
   transition: transform 0.3s ease;
   flex-shrink: 0;
 
+  @media (max-width: 768px) {
+    position: absolute;
+    z-index: 10;
+    height: 100%;
+    background: #171717;
+  }
+
   .closedSidebarButton {
     margin-right: 12px;
     padding: 0 8px;
@@ -34,7 +41,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 40px;
     margin-top: 16px;
     overflow-y: auto;
   }
@@ -197,7 +204,6 @@
   .chatModeSection {
     display: flex;
     flex-direction: column;
-    margin-bottom: 24px;
   }
 
   .miaInfoSection {
@@ -205,7 +211,6 @@
     border: 1px solid rgba(59, 130, 246, 0.35);
     border-radius: 8px;
     padding: 12px;
-    margin-bottom: 16px;
     backdrop-filter: blur(5px);
   }
 
@@ -250,8 +255,8 @@
     font-weight: 500;
     font-family: inherit;
     transition: all 0.2s ease;
-    margin-top: auto;
-    width: 100%;
+    margin: auto auto 12px;
+    width: calc(100% - 2px);
     box-sizing: border-box;
     display: block;
     flex-shrink: 0;
@@ -327,25 +332,8 @@
 
 .overlay {
   display: none;
-}
 
-.closedSidebar {
-  transform: translateX(-100%);
-}
-
-.openedSidebar {
-  transform: translateX(0);
-}
-
-@media (max-width: 768px) {
-  .sidebar {
-    position: absolute;
-    z-index: 10;
-    height: 100%;
-    background: #171717;
-  }
-  
-  .overlay {
+  @media (max-width: 768px) {
     display: block;
     position: fixed;
     top: 0;
@@ -355,4 +343,12 @@
     background: rgba(0, 0, 0, 0.5);
     z-index: 9;
   }
-} 
+}
+
+.closedSidebar {
+  transform: translateX(-100%);
+}
+
+.openedSidebar {
+  transform: translateX(0);
+}

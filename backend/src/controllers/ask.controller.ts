@@ -2,7 +2,7 @@ import type { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 import type { CoreMessage } from "ai";
 
 import { askSchema, askQuerySchema } from "../routes/schemas/ask.schema.js";
-import { BaseController } from "./baseController.js";
+import { BaseController } from "./base.controller";
 
 interface AskRequestBody {
     messages?: CoreMessage[];

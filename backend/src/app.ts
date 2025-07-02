@@ -4,12 +4,12 @@ import fastifyRateLimit from "@fastify/rate-limit";
 
 import { fastifyEnvSchema } from "./config/env.js";
 
-import swaggerPlugin from "./plugins/swaggerPlugin.js";
-import vectorStorePlugin from "./plugins/vectorStorePlugin.js";
-import llmPlugin from "./plugins/llmPlugin.js";
-import globalLimitPlugin from "./plugins/globalLimitPlugin.js";
-import ragOrchestrationPlugin from "./plugins/ragOrchestrationPlugin.js";
-import corsPlugin from "./plugins/corsPlugin.js";
+import swaggerPlugin from "./plugins/swagger.plugin";
+import vectorStorePlugin from "./plugins/vectorStore.plugin";
+import llmPlugin from "./plugins/llm.plugin";
+import globalLimitPlugin from "./plugins/globalLimit.plugin";
+import ragOrchestrationPlugin from "./plugins/ragOrchestration.plugin";
+import corsPlugin from "./plugins/cors.plugin";
 
 import { registerRoutes } from "./routes/index.js";
 
