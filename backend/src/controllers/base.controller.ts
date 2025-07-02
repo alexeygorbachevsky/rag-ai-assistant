@@ -25,6 +25,7 @@ export class BaseController {
     }
 
     protected setCorsHeaders(reply: FastifyReply): void {
+        // FIXME: allow all origins temporarily
         reply.header("Access-Control-Allow-Origin", "*");
         reply.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         reply.header("Access-Control-Allow-Headers", "Content-Type, Authorization");

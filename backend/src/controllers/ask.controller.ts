@@ -3,6 +3,7 @@ import type { CoreMessage } from "ai";
 
 import { askSchema, askQuerySchema } from "../routes/schemas/ask.schema.js";
 import { BaseController } from "./base.controller";
+import { getSkippedIp } from "../utils/rateLimits";
 
 interface AskRequestBody {
     messages?: CoreMessage[];
@@ -13,31 +14,30 @@ interface AskRequestQuery {
     model?: string;
 }
 
-const SKIPPED_IP = process.env.NODE_ENV === "development" ? "::1" : process.env.SKIPPED_IP;
-
 type Extracted = { question: string; conversationHistory: CoreMessage[] };
 
 export class AskController extends BaseController {
+    private readonly skippedIp: string | undefined;
+
     constructor(private fastify: FastifyInstance) {
         super();
+        this.skippedIp = getSkippedIp();
     }
 
     async handleAsk(
         request: FastifyRequest<{ Body: AskRequestBody; Querystring: AskRequestQuery }>,
         reply: FastifyReply,
-    ): Promise<Response | { error: string }> {
+    ): Promise<Response | string> {
         const startTime = Date.now();
 
         try {
-            if (request.ip !== SKIPPED_IP) {
+            if (request.ip !== this.skippedIp) {
                 const globalLimit = await this.fastify.globalLimitService.checkAndIncrementGlobalLimit();
                 if (!globalLimit.allowed) {
                     this.setCorsHeaders(reply);
                     reply.code(429);
 
-                    return {
-                        error: "Global daily limit has been reached. Please try again tomorrow.",
-                    };
+                    return "Global daily limit has been reached. Please try again later.";
                 }
             }
 
@@ -71,7 +71,7 @@ export class AskController extends BaseController {
             this.setCorsHeaders(reply);
             this.handleError(reply, error);
 
-            return { error: "Request processing failed" };
+            return "Request processing failed";
         }
     }
 
