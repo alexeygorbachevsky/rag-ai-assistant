@@ -3,6 +3,7 @@ import type { FastifyInstance } from "fastify";
 
 import { VectorStoreService } from "../services/vectorStoreService.js";
 import { VectorRepository, type VectorRepositoryConfig } from "../repositories/vectorRepository.js";
+import { EMBEDDING_MODEL } from "../../scripts/constants/embeddings";
 
 declare module "fastify" {
     interface FastifyInstance {
@@ -15,7 +16,7 @@ async function vectorStorePlugin(fastify: FastifyInstance) {
         url: process.env.QDRANT_URL as string,
         apiKey: process.env.QDRANT_API_KEY as string,
         collectionName: "mia_collection",
-        embeddingModel: "sentence-transformers/all-MiniLM-L6-v2",
+        embeddingModel: EMBEDDING_MODEL,
         embeddingApiKey: process.env.HF_API_TOKEN as string,
     };
 

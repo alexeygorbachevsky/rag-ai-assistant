@@ -3,6 +3,8 @@ import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/
 import type { CacheKeyStrategy, CacheEntry, SemanticCacheEntry } from "../../types/cache.js";
 import type Redis from "ioredis";
 
+import { EMBEDDING_MODEL } from "../../../scripts/constants/embeddings";
+
 export class SemanticCacheStrategy implements CacheKeyStrategy {
     private embeddings: HuggingFaceInferenceEmbeddings;
     private redis: Redis;
@@ -14,9 +16,8 @@ export class SemanticCacheStrategy implements CacheKeyStrategy {
         this.keyPrefix = keyPrefix;
         this.similarityThreshold = similarityThreshold;
 
-        // TODO
         this.embeddings = new HuggingFaceInferenceEmbeddings({
-            model: "sentence-transformers/all-MiniLM-L6-v2",
+            model: EMBEDDING_MODEL,
             apiKey: process.env.HF_API_TOKEN as string,
         });
     }

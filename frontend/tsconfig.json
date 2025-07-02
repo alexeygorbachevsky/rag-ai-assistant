@@ -20,17 +20,6 @@
       }
     ],
     "baseUrl": "src",
-    "paths": {
-      "api/*": [
-        "app/api/*"
-      ],
-      "icons/*": [
-        "icons/*"
-      ],
-      "components/*": [
-        "components/*"
-      ]
-    }
   },
   "include": [
     "next-env.d.ts",

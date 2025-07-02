@@ -1,3 +1,5 @@
+"use client";
+
 import joinClassNames from "classnames";
 
 import SidebarIcon from "icons/sidebar.svg";
@@ -5,32 +7,18 @@ import SidebarIcon from "icons/sidebar.svg";
 import { Dropdown } from "components";
 
 import { ChatMode } from "constants/chat";
-import { LanguageModels } from "constants/models";
 
 import { CHAT_MODE_OPTIONS, LANGUAGE_MODEL_OPTIONS } from "./duck/constants";
 
+import { useAppContext } from "contexts/AppContext";
+import { useChatContext } from "contexts/ChatContext";
+
 import styles from "./styles/styles.module.scss";
 
-interface Props {
-    isOpened: boolean;
-    onToggle: () => void;
-    onSendRagData?: (files: File[]) => void;
-    chatMode: ChatMode;
-    onChatModeChange: (mode: ChatMode) => void;
-    selectedModel: LanguageModels;
-    onModelChange: (model: LanguageModels) => void;
-    onDeleteChats: () => void;
-}
+const Sidebar = () => {
+    const { isSidebarOpened, toggleSidebar } = useAppContext();
+    const { onChatModeChange, onDeleteChats, onModelChange, selectedModel, chatMode } = useChatContext();
 
-const Sidebar = ({
-    isOpened,
-    onToggle,
-    chatMode,
-    onChatModeChange,
-    selectedModel,
-    onModelChange,
-    onDeleteChats,
-}: Props) => {
     const handleModeChange = (mode: ChatMode) => {
         onChatModeChange(mode);
     };
@@ -41,9 +29,14 @@ const Sidebar = ({
 
     return (
         <>
-            {isOpened && <div className={styles.overlay} onClick={onToggle} />}
-            <aside className={joinClassNames(styles.sidebar, isOpened ? styles.openedSidebar : styles.closedSidebar)}>
-                <button className={styles.closedSidebarButton} onClick={onToggle}>
+            {isSidebarOpened && <div className={styles.overlay} onClick={toggleSidebar} />}
+            <aside
+                className={joinClassNames(
+                    styles.sidebar,
+                    isSidebarOpened ? styles.openedSidebar : styles.closedSidebar,
+                )}
+            >
+                <button className={styles.closedSidebarButton} onClick={toggleSidebar}>
                     <SidebarIcon />
                 </button>
 

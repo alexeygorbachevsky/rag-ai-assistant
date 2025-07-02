@@ -5,6 +5,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 import ToastProvider from "components/ToastProvider";
 
+import { AppProvider } from "../contexts/AppContext";
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -30,7 +32,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+      <AppProvider>
+          {children}
+      </AppProvider>
         <ToastProvider />
       </body>
     </html>

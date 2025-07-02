@@ -1,6 +1,6 @@
 "use client";
 
-import {MouseEvent, useRef, useState} from "react";
+import { useRef, useState } from "react";
 
 import ArrowUpIcon from "icons/arrow-up.svg";
 import DictateIcon from "icons/dictate.svg";
@@ -8,30 +8,25 @@ import CrossIcon from "icons/cross.svg";
 import CheckmarkIcon from "icons/checkmark.svg";
 import StopIcon from "icons/stop.svg";
 
-import {TextArea} from "components/input";
+import { useChatContext } from "contexts/ChatContext";
+
+import { TextArea } from "components/input";
 
 import AudioVisualizer from "./components/audio-visualizer";
 
-import {useSpeechRecognition} from "../../duck/hooks";
-import {AudioVisualizerRef} from "./duck/types";
+import { AudioVisualizerRef } from "./duck/types";
+import { useSpeechRecognition } from "./duck/hooks";
 
 import styles from "./styles/styles.module.scss";
 
-interface ChatInputProps {
-    input: string;
-    setInput: (value: string) => void;
-    onSubmit: (event?: MouseEvent<HTMLButtonElement>, isVoice?: boolean) => void;
-    onStop: () => void;
-    status: "submitted" | "streaming" | "ready" | "error";
-}
-
-const ChatInput = ({input, setInput, onSubmit, onStop, status}: ChatInputProps) => {
+const ChatInput = () => {
+    const { input, setInput, onSubmit, onStop, status } = useChatContext();
     const [isDictating, setIsDictating] = useState(false);
 
     const audioVisualizerRef = useRef<AudioVisualizerRef>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-    const recognitionRef = useSpeechRecognition({setIsDictating, input, onSubmit, setInput, isDictating});
+    const recognitionRef = useSpeechRecognition({ setIsDictating, input, onSubmit, setInput, isDictating });
 
     const isGenerating = status === "submitted" || status === "streaming";
 
@@ -79,7 +74,7 @@ const ChatInput = ({input, setInput, onSubmit, onStop, status}: ChatInputProps) 
                                 toggleRecording();
                             }
 
-                            onSubmit(undefined, isDictating);
+                            onSubmit();
                         }
                     }}
                     after={
@@ -93,17 +88,17 @@ const ChatInput = ({input, setInput, onSubmit, onStop, status}: ChatInputProps) 
                             {isDictating ? (
                                 <>
                                     <button type="button" className={styles.audioButton} onClick={toggleRecording}>
-                                        <CrossIcon/>
+                                        <CrossIcon />
                                     </button>
                                     <button
                                         type="button"
                                         className={styles.audioButton}
                                         onClick={() => {
                                             toggleRecording();
-                                            onSubmit(undefined, true);
+                                            onSubmit();
                                         }}
                                     >
-                                        <CheckmarkIcon/>
+                                        <CheckmarkIcon />
                                     </button>
                                 </>
                             ) : (
@@ -116,24 +111,20 @@ const ChatInput = ({input, setInput, onSubmit, onStop, status}: ChatInputProps) 
                                             toggleRecording();
                                         }}
                                     >
-                                        <DictateIcon/>
+                                        <DictateIcon />
                                     </button>
                                     {isGenerating ? (
-                                        <button 
-                                            type="button" 
-                                            onClick={onStop} 
-                                            className={styles.iconButton}
-                                        >
-                                            <StopIcon/>
+                                        <button type="button" onClick={onStop} className={styles.iconButton}>
+                                            <StopIcon />
                                         </button>
                                     ) : (
-                                        <button 
-                                            type="button" 
-                                            onClick={onSubmit} 
+                                        <button
+                                            type="button"
+                                            onClick={onSubmit}
                                             className={styles.iconButton}
                                             disabled={!input || isGenerating}
                                         >
-                                            <ArrowUpIcon/>
+                                            <ArrowUpIcon />
                                         </button>
                                     )}
                                 </>

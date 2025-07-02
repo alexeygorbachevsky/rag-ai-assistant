@@ -4,13 +4,14 @@ import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
 import { QdrantVectorStore } from "@langchain/qdrant";
 
+import { EMBEDDING_MODEL } from "./constants/embeddings";
 import { MIACollectionDataLoader } from "./utils/miaCollectionDataLoader.js";
 
 const uploadMIACollection = async () => {
     const dataLoader = new MIACollectionDataLoader();
 
     const embeddings = new HuggingFaceInferenceEmbeddings({
-        model: "sentence-transformers/all-MiniLM-L6-v2",
+        model: EMBEDDING_MODEL,
         apiKey: process.env.HF_API_TOKEN,
     });
 

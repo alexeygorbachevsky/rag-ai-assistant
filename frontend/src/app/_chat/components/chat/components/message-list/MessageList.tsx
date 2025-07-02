@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo } from "react";
-import { UIMessage } from "ai";
+
+import { useChatContext } from "contexts/ChatContext";
 
 import Message from "./components/message";
 import TypingIndicator from "./components/stream-indicator";
@@ -10,12 +11,8 @@ import { useMessagesScroll } from "./duck/hooks";
 
 import styles from "./styles/styles.module.scss";
 
-interface Props {
-    messages: UIMessage[];
-    status?: "submitted" | "streaming" | "ready" | "error";
-}
-
-const MessageList = ({ messages, status }: Props) => {
+const MessageList = () => {
+    const { messages, status } = useChatContext();
     const { messagesRef } = useMessagesScroll({ messages });
 
     const lastMessage = messages[messages.length - 1];

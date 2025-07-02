@@ -1,19 +1,10 @@
-import SidebarIcon from "icons/sidebar.svg";
-
 import styles from "./styles/styles.module.scss";
 
-interface Props {
-    isSidebarOpened: boolean;
-    onToggleSidebar: () => void;
-}
+import SidebarButton from "./SidebarButton";
 
-const Header = ({ isSidebarOpened, onToggleSidebar }: Props) => (
+const Header = () => (
     <header className={styles.header}>
-        {!isSidebarOpened && (
-            <button className={styles.sidebarButton} onClick={onToggleSidebar}>
-                <SidebarIcon />
-            </button>
-        )}
+        <SidebarButton />
         <h1 className={styles.headerTitle}>RAG AI Assistant</h1>
     </header>
 );
