@@ -90,9 +90,6 @@ const Chat = () => {
         setMessages([]);
     };
 
-    const shouldShowTypingIndicator =
-        status === "submitted" && messages.length > 0 && messages[messages.length - 1]?.role === "user";
-
     return (
         <div className={styles.wrapper}>
             <Sidebar
@@ -109,8 +106,8 @@ const Chat = () => {
             <main className={joinClassNames(styles.mainArea, { [styles.mainAreaExpended]: !isSidebarOpened })}>
                 <Header isSidebarOpened={isSidebarOpened} onToggleSidebar={toggleSidebar} />
 
-                {messages.length > 0 ? (
-                    <MessageList messages={messages} isLoading={shouldShowTypingIndicator} />
+                {messages.length ? (
+                    <MessageList messages={messages} status={status} />
                 ) : (
                     <div className={styles.emptyStateContainer}>
                         <div className={styles.rateLimitInfo}>
@@ -138,7 +135,7 @@ const Chat = () => {
 };
 
 const ChatPage = () => (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense>
         <Chat />
     </Suspense>
 );

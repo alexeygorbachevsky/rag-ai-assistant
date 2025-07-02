@@ -1,12 +1,12 @@
 import type { FastifyRequest } from "fastify";
 import { createDataStreamResponse } from "ai";
 
-const SKIPPED_IP = process.env.NODE_ENV === "development" ? "::1" : process.env.SKIPPED_IP;
-
 export const rateLimitConfig = {
     max: 10,
     timeWindow: "1 day",
     allowList: (request: FastifyRequest) => {
+        const SKIPPED_IP = process.env.NODE_ENV === "development" ? "::1" : process.env.SKIPPED_IP;
+
         const allowedIPs = [SKIPPED_IP];
 
         return allowedIPs.includes(request.ip);

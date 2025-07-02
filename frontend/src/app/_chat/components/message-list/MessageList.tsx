@@ -1,34 +1,38 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useMemo } from "react";
 import { UIMessage } from "ai";
 
 import Message from "./components/message";
-import TypingIndicator from "./components/generation-indicator";
+import TypingIndicator from "./components/stream-indicator";
+
+import { useMessagesScroll } from "./duck/hooks";
 
 import styles from "./styles/styles.module.scss";
 
-interface MessagesListProps {
+interface Props {
     messages: UIMessage[];
-    isLoading?: boolean;
+    status?: "submitted" | "streaming" | "ready" | "error";
 }
 
-const MessageList = ({ messages, isLoading = false }: MessagesListProps) => {
-    const messagesRef = useRef<HTMLDivElement>(null);
+const MessageList = ({ messages, status }: Props) => {
+    const { messagesRef } = useMessagesScroll({ messages });
 
-    useEffect(() => {
-        if (messagesRef.current) {
-            messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
-        }
-    }, [messages, isLoading]);
+    const lastMessage = messages[messages.length - 1];
+    const isLoading =
+        ((status === "submitted" || status === "streaming") && lastMessage?.role === "user") ||
+        (lastMessage?.role === "assistant" && !lastMessage?.content.trim());
+
+    const renderedMessages = useMemo(
+        () => messages.filter(msg => msg.content.trim()).map(msg => <Message key={msg.id} {...msg} />),
+        [messages],
+    );
 
     return (
         <section className={styles.messagesScrollWrapper} ref={messagesRef}>
             <div className={styles.messagesArea}>
                 <div className={styles.spacer} />
-                {messages.map(msg => (
-                    <Message key={msg.id} {...msg} />
-                ))}
+                {renderedMessages}
                 {isLoading && <TypingIndicator />}
                 <div className={styles.spacer} />
             </div>
@@ -37,4 +41,3 @@ const MessageList = ({ messages, isLoading = false }: MessagesListProps) => {
 };
 
 export default MessageList;
-

@@ -10,14 +10,14 @@ interface DropdownOption<T> {
     description?: string;
 }
 
-interface DropdownProps<T> {
+interface Props<T> {
     options: DropdownOption<T>[];
     value: T;
     onChange: (value: T) => void;
     className?: string;
 }
 
-const Dropdown = <T,>({ options, value, onChange, className }: DropdownProps<T>) => {
+const Dropdown = <T,>({ options, value, onChange, className }: Props<T>) => {
     const [isOpen, setIsOpen] = useState(false);
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
     const dropdownRef = useRef<HTMLDivElement>(null);

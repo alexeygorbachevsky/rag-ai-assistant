@@ -2,7 +2,7 @@ import joinClassNames from "classnames";
 
 import styles from "../message/styles/styles.module.scss";
 
-const TypingIndicator = () => (
+const StreamIndicator = () => (
     <div className={joinClassNames(styles.message, styles.assistant)}>
         <div className={joinClassNames(styles.bubble, styles.assistantBubble)}>
             <div className={styles.typingIndicator}>
@@ -12,4 +12,4 @@ const TypingIndicator = () => (
     </div>
 );
 
-export default TypingIndicator;
+export default StreamIndicator;

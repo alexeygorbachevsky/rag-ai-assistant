@@ -2,12 +2,12 @@ import SidebarIcon from "icons/sidebar.svg";
 
 import styles from "./styles/styles.module.scss";
 
-interface HeaderProps {
+interface Props {
     isSidebarOpened: boolean;
     onToggleSidebar: () => void;
 }
 
-const Header = ({ isSidebarOpened, onToggleSidebar }: HeaderProps) => (
+const Header = ({ isSidebarOpened, onToggleSidebar }: Props) => (
     <header className={styles.header}>
         {!isSidebarOpened && (
             <button className={styles.sidebarButton} onClick={onToggleSidebar}>
