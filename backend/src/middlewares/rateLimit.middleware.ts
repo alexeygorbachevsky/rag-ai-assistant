@@ -3,8 +3,8 @@ import { createDataStreamResponse } from "ai";
 
 import { getSkippedIp } from "../utils/rateLimits.js";
 
-export const rateLimitConfig = {
-    max: 10,
+export const getRateLimitConfig = () => ({
+    max: parseInt(process.env.IP_DAILY_LIMIT || "0"),
     timeWindow: "1 day",
     allowList: (request: FastifyRequest) => request.ip === getSkippedIp(),
     errorResponseBuilder: () => {
@@ -24,4 +24,4 @@ export const rateLimitConfig = {
 
         return response;
     },
-};
+});

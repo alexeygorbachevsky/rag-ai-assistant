@@ -19,7 +19,7 @@ export class GlobalLimitService {
     }
 
     async checkAndIncrementGlobalLimit(): Promise<{ allowed: boolean; currentCount: number; limit: number }> {
-        const limit = parseInt(process.env.GLOBAL_DAILY_LIMIT || "10");
+        const limit = parseInt(process.env.GLOBAL_DAILY_LIMIT || "0");
         return this.limitRepository.incrementAndCheck(limit);
     }
 

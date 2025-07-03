@@ -57,9 +57,12 @@ export const fastifyEnvSchema = {
             description: "IP address to skip rate limiting (optional)",
         },
         GLOBAL_DAILY_LIMIT: {
-            type: "integer",
-            default: 10,
+            type: ["integer", "null"],
             description: "Global daily request limit",
+        },
+        IP_DAILY_LIMIT: {
+            type: ["integer", "null"],
+            description: "Daily request limit per IP address",
         },
         ENABLE_CACHE: {
             type: "boolean",

@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify";
 
 import { askRouteSchema } from "./schemas/ask.schema.js";
 import { optionsHandler } from "../middlewares/cors.middleware.js";
-import { rateLimitConfig } from "../middlewares/rateLimit.middleware.js";
+import { getRateLimitConfig } from "../middlewares/rateLimit.middleware.js";
 import { AskController } from "../controllers/ask.controller.js";
 
 const askRoute = async (fastify: FastifyInstance) => {
@@ -14,7 +14,8 @@ const askRoute = async (fastify: FastifyInstance) => {
         "/ask",
         {
             config: {
-                rateLimit: rateLimitConfig,
+                rateLimit: getRateLimitConfig(),
+
             },
             schema: askRouteSchema,
         },
