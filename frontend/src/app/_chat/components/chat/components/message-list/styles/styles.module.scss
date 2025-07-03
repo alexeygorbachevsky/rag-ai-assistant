@@ -1,3 +1,5 @@
+@use 'styles/breakpoints';
+
 .messagesScrollWrapper {
   padding: 0 24px;
   overflow-y: auto;
@@ -5,7 +7,7 @@
   display: flex;
   flex-direction: column;
 
-  @media (max-width: 360px) {
+  @include breakpoints.smaller-than-xs {
     padding: 0 16px;
   }
 

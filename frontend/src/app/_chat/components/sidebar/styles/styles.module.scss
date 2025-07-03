@@ -1,3 +1,5 @@
+@use 'styles/breakpoints';
+
 .sidebar {
   height: 100vh;
   height: 100dvh;
@@ -9,7 +11,7 @@
   transition: transform 0.3s ease;
   flex-shrink: 0;
 
-  @media (max-width: 768px) {
+  @include breakpoints.smaller-than-lg {
     position: absolute;
     z-index: 10;
     height: 100%;
@@ -332,7 +334,7 @@
 .overlay {
   display: none;
 
-  @media (max-width: 768px) {
+  @include breakpoints.smaller-than-lg {
     display: block;
     position: fixed;
     top: 0;

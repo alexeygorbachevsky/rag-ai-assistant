@@ -1,7 +1,9 @@
+@use 'styles/breakpoints';
+
 .form {
   padding: 0 24px;
 
-  @media (max-width: 360px) {
+  @include breakpoints.smaller-than-xs {
     padding: 0 16px;
   }
 

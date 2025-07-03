@@ -1,3 +1,5 @@
+@use 'styles/breakpoints';
+
 .header {
   position: sticky;
   padding: 0 24px;
@@ -6,7 +8,7 @@
   align-items: center;
   box-shadow: 0 1px 0 #ffffff0d;
 
-  @media (max-width: 360px) {
+  @include breakpoints.smaller-than-xs {
     padding: 0 16px;
   }
 

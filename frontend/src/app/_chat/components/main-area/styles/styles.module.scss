@@ -1,3 +1,5 @@
+@use 'styles/breakpoints';
+
 .mainArea {
     margin-left: 0;
     transition: margin-left 0.3s ease;
@@ -5,7 +7,7 @@
     display: flex;
     flex-direction: column;
 
-    @media (max-width: 768px) {
+    @include breakpoints.smaller-than-lg {
         transition: none;
     }
 }
@@ -13,7 +15,7 @@
 .mainAreaExpended {
     margin-left: -260px;
 
-    @media (max-width: 768px) {
+    @include breakpoints.smaller-than-lg {
         margin-left: 0;
     }
 }
