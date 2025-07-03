@@ -28,10 +28,6 @@ RUN chown -R appuser:appuser /app \
 
 USER appuser
 
-# Set environment variables for Hugging Face cache
-ENV HF_HOME=/tmp/huggingface_cache
-ENV TRANSFORMERS_CACHE=/tmp/huggingface_cache
-
 EXPOSE 7860
 CMD ["yarn", "start"]
 
