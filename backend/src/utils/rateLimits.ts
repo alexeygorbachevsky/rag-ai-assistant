@@ -1,1 +1,1 @@
-export const getSkippedIp = () => (process.env.NODE_ENV !== "development" ? "::1" : process.env.SKIPPED_IP);
+export const getSkippedIp = () => (process.env.NODE_ENV === "development" ? "::1" : process.env.SKIPPED_IP);
