@@ -1,12 +1,12 @@
 import crypto from "crypto";
-import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
+import { LocalEmbeddingsService } from "../localEmbeddings.service";
 import type { CacheKeyStrategy, CacheEntry, SemanticCacheEntry } from "../../types/cache.js";
 import type Redis from "ioredis";
-
 import { EMBEDDING_MODEL } from "../../../scripts/constants/embeddings";
+// import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
 
 export class SemanticCacheStrategy implements CacheKeyStrategy {
-    private embeddings: HuggingFaceInferenceEmbeddings;
+    private embeddings: LocalEmbeddingsService;
     private redis: Redis;
     private similarityThreshold: number;
     private keyPrefix: string;
@@ -16,10 +16,16 @@ export class SemanticCacheStrategy implements CacheKeyStrategy {
         this.keyPrefix = keyPrefix;
         this.similarityThreshold = similarityThreshold;
 
-        this.embeddings = new HuggingFaceInferenceEmbeddings({
-            model: EMBEDDING_MODEL,
-            apiKey: process.env.HF_API_TOKEN as string,
-        });
+        this.embeddings = new LocalEmbeddingsService(EMBEDDING_MODEL);
+
+        // this.embeddings = new HuggingFaceInferenceEmbeddings({
+        //     model: EMBEDDING_MODEL,
+        //     apiKey: process.env.HF_API_TOKEN as string,
+        // });
+    }
+
+    async initialize() {
+        await this.embeddings.initialize();
     }
 
     async generateKey(question: string): Promise<string> {
@@ -33,6 +39,7 @@ export class SemanticCacheStrategy implements CacheKeyStrategy {
         }
 
         try {
+            await this.initialize();
             const questionEmbedding = await this.embeddings.embedQuery(question);
             const keys = await this.redis.keys("*");
 
@@ -71,6 +78,7 @@ export class SemanticCacheStrategy implements CacheKeyStrategy {
 
     async storeWithEmbedding(question: string, entry: CacheEntry, ttl: number): Promise<void> {
         try {
+            await this.initialize();
             const embedding = await this.embeddings.embedQuery(question);
             const key = await this.generateKey(question);
 
@@ -86,8 +94,8 @@ export class SemanticCacheStrategy implements CacheKeyStrategy {
         }
     }
 
-    private cosineSimilarity(a: number[], b: number[]): number {
-        if (a.length !== b.length) {
+    private cosineSimilarity(vecA: number[], vecB: number[]): number {
+        if (vecA.length !== vecB.length) {
             return 0;
         }
 
@@ -95,10 +103,10 @@ export class SemanticCacheStrategy implements CacheKeyStrategy {
         let normA = 0;
         let normB = 0;
 
-        for (let i = 0; i < a.length; i++) {
-            dotProduct += a[i] * b[i];
-            normA += a[i] * a[i];
-            normB += b[i] * b[i];
+        for (let i = 0; i < vecA.length; i++) {
+            dotProduct += vecA[i] * vecB[i];
+            normA += vecA[i] * vecA[i];
+            normB += vecB[i] * vecB[i];
         }
 
         if (normA === 0 || normB === 0) {

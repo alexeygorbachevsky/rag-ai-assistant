@@ -1,18 +1,20 @@
 import { QdrantVectorStore } from "@langchain/qdrant";
-import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
 import type { FastifyBaseLogger } from "fastify";
+// import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
+
+import { LocalEmbeddingsService } from "../services/localEmbeddings.service";
 
 export interface VectorRepositoryConfig {
     url: string;
     apiKey: string;
     collectionName: string;
     embeddingModel: string;
-    embeddingApiKey: string;
+    embeddingApiKey?: string;
 }
 
 export class VectorRepository {
     private vectorStore: QdrantVectorStore | null = null;
-    private embeddings: HuggingFaceInferenceEmbeddings;
+    private embeddings: LocalEmbeddingsService;
     private config: VectorRepositoryConfig;
     private logger: FastifyBaseLogger;
 
@@ -20,14 +22,18 @@ export class VectorRepository {
         this.config = config;
         this.logger = logger;
 
-        this.embeddings = new HuggingFaceInferenceEmbeddings({
-            model: config.embeddingModel,
-            apiKey: config.embeddingApiKey,
-        });
+        this.embeddings = new LocalEmbeddingsService(config.embeddingModel!);
+
+        // this.embeddings = new HuggingFaceInferenceEmbeddings({
+        //     model: config.embeddingModel,
+        //     apiKey: config.embeddingApiKey
+        // });
     }
 
     async initialize(): Promise<void> {
         try {
+            await this.embeddings.initialize();
+
             this.vectorStore = await QdrantVectorStore.fromExistingCollection(this.embeddings, {
                 url: this.config.url,
                 apiKey: this.config.apiKey,

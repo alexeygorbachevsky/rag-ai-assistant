@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
+import { LocalEmbeddingsService } from "../src/services/localEmbeddings.service";
 import { QdrantVectorStore } from "@langchain/qdrant";
+// import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
 
 import { EMBEDDING_MODEL } from "./constants/embeddings";
 import { MIACollectionDataLoader } from "./utils/miaCollectionDataLoader.js";
@@ -10,10 +11,13 @@ import { MIACollectionDataLoader } from "./utils/miaCollectionDataLoader.js";
 const uploadMIACollection = async () => {
     const dataLoader = new MIACollectionDataLoader();
 
-    const embeddings = new HuggingFaceInferenceEmbeddings({
-        model: EMBEDDING_MODEL,
-        apiKey: process.env.HF_API_TOKEN,
-    });
+    const embeddings = new LocalEmbeddingsService(EMBEDDING_MODEL);
+    await embeddings.initialize();
+
+    // const embeddings = new HuggingFaceInferenceEmbeddings({
+    //     model: EMBEDDING_MODEL,
+    //     apiKey: process.env.HF_API_TOKEN,
+    // });
 
     const textSplitter = new RecursiveCharacterTextSplitter({
         chunkSize: 1000,

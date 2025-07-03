@@ -17,7 +17,7 @@ async function vectorStorePlugin(fastify: FastifyInstance) {
         apiKey: process.env.QDRANT_API_KEY as string,
         collectionName: "mia_collection",
         embeddingModel: EMBEDDING_MODEL,
-        embeddingApiKey: process.env.HF_API_TOKEN as string,
+        // embeddingApiKey: process.env.HF_API_TOKEN as string,
     };
 
     const vectorRepository = new VectorRepository(config, fastify.log);
