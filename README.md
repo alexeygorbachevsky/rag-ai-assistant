@@ -20,7 +20,6 @@ The backend is built with a modular architecture featuring:
 - **LLM Service**: Integration with OpenRouter large language models for text generation
 - **Caching System**: Multi-strategy caching (semantic and hash-based) with Redis
 - **Rate Limiting**: Comprehensive rate limiting and usage tracking
-- **Document Processing**: Support for various document formats with embedding generation
 - **RAG Orchestration**: Intelligent retrieval and generation pipeline
 
 #### Key Components:
@@ -37,7 +36,7 @@ The frontend provides a modern, responsive user interface with:
 - **Real-time Chat Interface**: Interactive conversation with streaming responses
 - **Voice Input Support**: Audio recording and transcription capabilities
 - **Responsive Design**: Mobile-friendly interface with adaptive layouts
-- **State Management**: Context-based state management for chat sessions
+- **State Management**: Context-based state management
 - **Component Architecture**: Modular, reusable UI components
 
 #### Key Features:
@@ -106,4 +105,4 @@ The application includes Docker support for containerized deployment.
 
 ## License
 
-[License information to be added] 
+MIT License - see [LICENSE](LICENSE) file for details. 
