@@ -14,7 +14,7 @@ export class LocalEmbeddingsService {
         if (!this.initialized) {
             try {
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-expect-error
+                // @ts-ignore
                 this.model = await pipeline("feature-extraction", this.modelName);
                 this.initialized = true;
             } catch (error) {

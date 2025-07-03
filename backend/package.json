@@ -9,8 +9,8 @@
     "start": "node dist/src/app.js",
     "upload-mia-data": "tsx --env-file=.env scripts/uploadMIACollection.ts",
     "type-check": "tsc --noEmit",
-    "lint-check": "eslint src/**/*.ts",
-    "lint:fix": "eslint src/**/*.ts --fix",
+    "lint-check": "eslint . --config eslint.config.mjs",
+    "lint:fix": "eslint . --fix --config eslint.config.mjs",
     "format:check": "prettier --check src/**/*.ts scripts/**/*.ts",
     "format:fix": "prettier --write src/**/*.ts scripts/**/*.ts"
   },
@@ -33,7 +33,6 @@
     "@fastify/rate-limit": "8.1.0",
     "@fastify/swagger": "^8.15.0",
     "@fastify/swagger-ui": "^4.1.0",
-    "@huggingface/inference": "^4.0.6",
     "@huggingface/transformers": "^3.6.1",
     "@langchain/community": "^0.3.47",
     "@langchain/core": "^0.3.58",

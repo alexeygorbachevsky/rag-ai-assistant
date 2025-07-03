@@ -1,8 +1,9 @@
 import crypto from "crypto";
-import { LocalEmbeddingsService } from "../localEmbeddings.service";
-import type { CacheKeyStrategy, CacheEntry, SemanticCacheEntry } from "../../types/cache.js";
 import type Redis from "ioredis";
-import { EMBEDDING_MODEL } from "../../../scripts/constants/embeddings";
+
+import { LocalEmbeddingsService } from "../localEmbeddings.service.js";
+import type { CacheKeyStrategy, CacheEntry, SemanticCacheEntry } from "../../types/cache.js";
+import { EMBEDDING_MODEL } from "../../../scripts/constants/embeddings.js";
 // import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
 
 export class SemanticCacheStrategy implements CacheKeyStrategy {

@@ -1,5 +1,5 @@
 import type { CacheService, CacheEntry } from "../types/cache.js";
-import { CacheRepository, type CacheRepositoryConfig } from "../repositories/cache.repository";
+import { CacheRepository, type CacheRepositoryConfig } from "../repositories/cache.repository.js";
 import { HashCacheStrategy } from "./cache/hashCacheStrategy.js";
 import { SemanticCacheStrategy } from "./cache/semanticCacheStrategy.js";
 import type { FastifyBaseLogger } from "fastify";

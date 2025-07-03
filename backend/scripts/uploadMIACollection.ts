@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import { LocalEmbeddingsService } from "../src/services/localEmbeddings.service";
 import { QdrantVectorStore } from "@langchain/qdrant";
 // import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
 
-import { EMBEDDING_MODEL } from "./constants/embeddings";
+import { LocalEmbeddingsService } from "../src/services/localEmbeddings.service.js";
+import { EMBEDDING_MODEL } from "./constants/embeddings.js";
 import { MIACollectionDataLoader } from "./utils/miaCollectionDataLoader.js";
 
 const uploadMIACollection = async () => {

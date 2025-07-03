@@ -1,8 +1,8 @@
 import fp from "fastify-plugin";
 import type { FastifyInstance } from "fastify";
 
-import { RAGOrchestrationService, type RAGConfig } from "../services/ragOrchestration.service";
-import { RedisCacheService } from "../services/redisCache.service";
+import { RAGOrchestrationService, type RAGConfig } from "../services/ragOrchestration.service.js";
+import { RedisCacheService } from "../services/redisCache.service.js";
 
 declare module "fastify" {
     interface FastifyInstance {

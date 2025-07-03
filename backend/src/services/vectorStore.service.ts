@@ -1,5 +1,6 @@
 import type { FastifyBaseLogger } from "fastify";
-import type { VectorRepository } from "../repositories/vector.repository";
+
+import type { VectorRepository } from "../repositories/vector.repository.js";
 
 export class VectorStoreService {
     private vectorRepository: VectorRepository;

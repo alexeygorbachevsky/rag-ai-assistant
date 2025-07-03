@@ -2,7 +2,7 @@ import { QdrantVectorStore } from "@langchain/qdrant";
 import type { FastifyBaseLogger } from "fastify";
 // import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
 
-import { LocalEmbeddingsService } from "../services/localEmbeddings.service";
+import { LocalEmbeddingsService } from "../services/localEmbeddings.service.js";
 
 export interface VectorRepositoryConfig {
     url: string;

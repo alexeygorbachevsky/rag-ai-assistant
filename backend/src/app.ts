@@ -4,12 +4,12 @@ import fastifyRateLimit from "@fastify/rate-limit";
 
 import { fastifyEnvSchema } from "./config/env.js";
 
-import swaggerPlugin from "./plugins/swagger.plugin";
-import vectorStorePlugin from "./plugins/vectorStore.plugin";
-import llmPlugin from "./plugins/llm.plugin";
-import globalLimitPlugin from "./plugins/globalLimit.plugin";
-import ragOrchestrationPlugin from "./plugins/ragOrchestration.plugin";
-import corsPlugin from "./plugins/cors.plugin";
+import swaggerPlugin from "./plugins/swagger.plugin.js";
+import vectorStorePlugin from "./plugins/vectorStore.plugin.js";
+import llmPlugin from "./plugins/llm.plugin.js";
+import globalLimitPlugin from "./plugins/globalLimit.plugin.js";
+import ragOrchestrationPlugin from "./plugins/ragOrchestration.plugin.js";
+import corsPlugin from "./plugins/cors.plugin.js";
 
 import { registerRoutes } from "./routes/index.js";
 
@@ -18,6 +18,7 @@ const fastify = Fastify({
         level: process.env.NODE_ENV === "production" ? "warn" : "info",
     },
     trustProxy: true,
+    pluginTimeout: 300000
 });
 
 await fastify.register(fastifyEnv, {

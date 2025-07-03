@@ -38,7 +38,7 @@ export default [
       'no-var': 'error',
       'no-constant-condition': ['error', { checkLoops: false }],
       'import/no-useless-path-segments': 'off',
-      'import/extensions': 'off',
+      'import/extensions': ['error', 'ignorePackages'],
       'import/prefer-default-export': 'off',
       'no-undef': 'off'
     },

@@ -1,7 +1,7 @@
 import fp from "fastify-plugin";
 import type { FastifyInstance } from "fastify";
 
-import { LLMService, type LLMConfig } from "../services/llm.service";
+import { LLMService, type LLMConfig } from "../services/llm.service.js";
 import { LanguageModels } from "../constants/models.js";
 
 declare module "fastify" {

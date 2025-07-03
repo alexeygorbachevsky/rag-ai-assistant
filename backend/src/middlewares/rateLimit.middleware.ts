@@ -1,6 +1,7 @@
 import type { FastifyRequest } from "fastify";
 import { createDataStreamResponse } from "ai";
-import { getSkippedIp } from "../utils/rateLimits";
+
+import { getSkippedIp } from "../utils/rateLimits.js";
 
 export const rateLimitConfig = {
     max: 10,

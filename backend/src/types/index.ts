@@ -1,4 +1,4 @@
-import type { GlobalLimitService } from "../services/globalLimit.service";
+import type { GlobalLimitService } from "../services/globalLimit.service.js";
 
 declare module "fastify" {
     interface FastifyInstance {

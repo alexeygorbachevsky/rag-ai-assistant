@@ -47,7 +47,7 @@ export class RAGOrchestrationService {
                 const cached = await this.cacheService.get(question);
                 if (cached) {
                     this.logger.info(`Cache hit for question: "${question}"`);
-                    return StreamCacheUtil.createSimpleStreamResponse(cached.answer, cached.sources);
+                    return StreamCacheUtil.createSimpleStreamResponse(cached.answer);
                 }
             }
             const searchStartTime = Date.now();
