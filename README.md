@@ -6,7 +6,11 @@ A comprehensive AI-powered question-answering system that combines Retrieval-Aug
 
 🚀 **Live Demo**: [RAG AI Assistant](https://rag-ai-assistant-alexeygorbachevskiys-projects.vercel.app)
 
-🎥 **Video Demo**:
+🎥 **Video Demo**: 
+
+https://github.com/user-attachments/assets/cc624540-e657-4455-b946-34f1ae2a8c4c
+
+
 
 ## 📋 Overview
 
