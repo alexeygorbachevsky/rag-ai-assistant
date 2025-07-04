@@ -2,14 +2,17 @@
 
 A comprehensive AI-powered question-answering system that combines Retrieval-Augmented Generation (RAG) with real-time document processing and intelligent caching mechanisms.
 
-## Demo Video
+## 🎬 Demo
 
+🚀 **Live Demo**: [RAG AI Assistant](https://rag-ai-assistant-alexeygorbachevskiys-projects.vercel.app)
 
-## Overview
+🎥 **Video Demo**:
+
+## 📋 Overview
 
 This application is a full-stack AI assistant that leverages Retrieval-Augmented Generation (RAG) to provide accurate, context-aware responses to user queries. The system integrates document retrieval, semantic search using vector embeddings, and generative AI to deliver intelligent conversational experiences.
 
-## Architecture
+## 🧱 Architecture
 
 ### Backend (Node.js/TypeScript)
 
@@ -46,7 +49,7 @@ The frontend provides a modern, responsive user interface with:
 - **Toast Notifications**: User feedback and error handling
 - **Responsive Layout**: Adaptive design for various screen sizes
 
-## Technology Stack
+## 🛠️ Technology Stack
 
 ### Backend
 - **Runtime**: Node.js with TypeScript
@@ -66,7 +69,7 @@ The frontend provides a modern, responsive user interface with:
 - **Audio Processing**: Web Speech API
 - **UI Components**: Custom component library
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 - Node.js (v18 or higher)
@@ -99,10 +102,10 @@ The frontend provides a modern, responsive user interface with:
 - Frontend: `yarn dev` (runs on port 3000)
 - Backend: `yarn dev` (runs on port 3001)
 
-## Deployment
+## 🐳 Deployment
 
 The application includes Docker support for containerized deployment.
 
-## License
+## 📄 License
 
 MIT License - see [LICENSE](LICENSE) file for details. 
